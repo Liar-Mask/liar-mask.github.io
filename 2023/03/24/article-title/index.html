@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Test | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案《PASS: Parameters Audit-based Secure and Fair Federated Learning Scheme against Free Rider》  Author：Jianhua Wang Online Available：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2207.07292 2022">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Test">
+<meta property="og:url" content="http://example.com/2023/03/24/article-title/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案《PASS: Parameters Audit-based Secure and Fair Federated Learning Scheme against Free Rider》  Author：Jianhua Wang Online Available：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2207.07292 2022">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2022/07/21/aRMoxyCDWbAtKfv.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/21/GYv1W8HK9MlgpEc.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/21/9xzwkujGapRgnYB.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/21/rZNUuPkdVlC2IDA.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/21/Ifqn4Qspj1aVXil.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/21/23vIxbnhO9uVSmR.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/21/BnbIYAMd4LptrFD.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/22/SncgyDCMN6wuBAz.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/22/9qNtd1e5yZSP8DA.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/22/CHr3nyNsLlfOYPd.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/29/mqNT3OWlGtfraVe.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/29/hwSVNdZjEeiyYf5.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/29/V46KyecEBrQUMzO.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/29/o41fnvJwktigTQh.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/29/Ro1NDZE5FhbndkO.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/29/dgZDjSV4TLBoIEz.png">
+<meta property="article:published_time" content="2023-03-24T06:12:01.000Z">
+<meta property="article:modified_time" content="2023-03-24T06:13:52.241Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/07/21/aRMoxyCDWbAtKfv.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-article-title" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/03/24/article-title/" class="article-date">
+  <time class="dt-published" datetime="2023-03-24T06:12:01.000Z" itemprop="datePublished">2023-03-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Test
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="论文理解：基于参数审计的抗Free-Rider安全公平联邦学习方案"><a href="#论文理解：基于参数审计的抗Free-Rider安全公平联邦学习方案" class="headerlink" title="论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案"></a>论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案</h3><p>《PASS: Parameters Audit-based Secure and Fair Federated Learning Scheme against Free Rider》</p>
+<blockquote>
+<p>Author：Jianhua Wang</p>
+<p>Online Available：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2207.07292">https://arxiv.org/abs/2207.07292</a></p>
+<p>2022.7.29-ZGX</p>
+</blockquote>
+<h4 id="1-他们为什么做这项工作？（做这项工作的背景和目的）"><a href="#1-他们为什么做这项工作？（做这项工作的背景和目的）" class="headerlink" title="1.他们为什么做这项工作？（做这项工作的背景和目的）"></a>1.他们为什么做这项工作？（做这项工作的背景和目的）</h4><p>FL系统脆弱，无法抵御Free-Rider (FR) attack（搭便车攻击），这会导致隐私泄露，并降低FL系统性能。现有的防御机制仅涉及FR敌手占总客户端数量少于50%的场景，且不能抵御自私FR（SFR)。</p>
+<h4 id="2-针对这项工作，别人做过了哪些工作，有哪些缺陷？"><a href="#2-针对这项工作，别人做过了哪些工作，有哪些缺陷？" class="headerlink" title="2. 针对这项工作，别人做过了哪些工作，有哪些缺陷？"></a>2. 针对这项工作，别人做过了哪些工作，有哪些缺陷？</h4><ul>
+<li><p>以往的防御方案：</p>
+<ul>
+<li>专注于客户端贡献评估，贡献程度通过全局更新与本地更新的相似度来衡量。这些方案认为有用的本地更新值一定和全局更新值相似。</li>
+<li>缺陷：这种贡献评估的方法难以检测自私FR（SFR)，SFR使用公共数据集训练模型参与联邦学习，难以检测。</li>
+</ul>
+</li>
+<li><p>贡献评估方法：</p>
+<ul>
+<li>主要从数据质量和数据数量两方面。数据数量能够被FR伪造；传统的数据质量评估有隐私数据泄露的风险。</li>
+<li>Liu等总结了四种贡献评估方法：自我报告（self-report）、utility game、沙普利值（Shapley value）和个人表现（individual performance）</li>
+<li>缺陷：<ul>
+<li>自我报告面临和数据数量评估一样的问题，容易被FR伪造；</li>
+<li>utility game 受参与FL系统的先后次序的影响；</li>
+<li>沙普利值通信开销太大且有数据泄露风险。</li>
+</ul>
+</li>
+<li>因此，个人表现评估是四者中最直观合理的贡献评估方法。基于这个想法，我们提出了通过传输本地更新值到每一个客户端进行参数审计的贡献评估方案。</li>
+</ul>
+</li>
+<li><p>隐私保护相关工作：</p>
+<ul>
+<li>研究发现敌手能够通过每轮训练的梯度重建出隐私输入数据。（梯度泄露攻击）</li>
+<li>通过相关研究的探索和作者的实验发现，在本地侧使用方差为$10^{-2}$、均值为0的高斯噪声可以较好地保护数据免受梯度泄露攻击侵扰（高斯LDP方案）。此外，高斯LDP对FL模型的性能影响较小。</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-他们大概是怎么做这项工作的？（一两句话概括）"><a href="#3-他们大概是怎么做这项工作的？（一两句话概括）" class="headerlink" title="3.他们大概是怎么做这项工作的？（一两句话概括）"></a>3.他们大概是怎么做这项工作的？（一两句话概括）</h4><ul>
+<li>PASS主要由两个模块组成，隐私保护策略和贡献评估。贡献值低于阈值的客户端将被淘汰。<ul>
+<li>贡献评估：<ul>
+<li>提出了基于参数审计的方案，允许每个客户端审计本地更新。</li>
+<li>贡献采用<strong>Accuracy差值评估</strong>，如果贡献低于阈值，则该客户端被判断为Free Riders淘汰。</li>
+</ul>
+</li>
+<li>隐私保护策略：<ul>
+<li><p>采用<strong>高斯本地差分隐私</strong>对传输的参数进行保护，防止梯度泄露攻击。</p>
+</li>
+<li><p>同时，为了降低传输复杂度，采用<strong>参数剪枝</strong>，提供传输效率。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-他们的这项工作，做的好不好？好在哪里？"><a href="#4-他们的这项工作，做的好不好？好在哪里？" class="headerlink" title="4.他们的这项工作，做的好不好？好在哪里？"></a>4.他们的这项工作，做的好不好？好在哪里？</h4><p>有如下优点：</p>
+<ul>
+<li>在敌手占客户端总数超过50%的情况下也拥有抵抗力；</li>
+<li>能有效对抗匿名FR攻击和自私FR攻击；</li>
+<li>采用高斯本地差分隐私，能在几乎不损失系统准确性的情况下防止隐私泄露；</li>
+<li>与同类型防御方案相比，本方案与RFFL水平相同，拥有比其他方案更低的假阳率。</li>
+</ul>
+<h4 id="5-他们这项工作，有没有不好之处，不好在哪里？"><a href="#5-他们这项工作，有没有不好之处，不好在哪里？" class="headerlink" title="5.他们这项工作，有没有不好之处，不好在哪里？"></a>5.他们这项工作，有没有不好之处，不好在哪里？</h4><ul>
+<li>对于不同客户端，隐私数据集的数据分布之间可能存在差异，会影响客户端参数审计的准确度和公平性，如何削减或消除这一消极影响作者未考虑。</li>
+<li>参数审计时，无法防范客户端的恶意行为，例如：<ul>
+<li>客户端共谋：多个恶意客户端之间互相审计时，相互包庇遮掩，上传虚假的Acc贡献值给服务器，使得服务器无法检测出非法客户端。</li>
+<li>客户端污蔑：恶意客户端在审计正常客户端时，上传极低的Acc贡献值给服务器，使得服务器错误地将正常客户端判别为FR并将其淘汰。</li>
+</ul>
+</li>
+<li>没有给出防御自私FR（SFR）的针对性的设计说明。</li>
+<li>隐私保护策略中的高斯本地差分隐私术沿用前人方案，没有太多创新。</li>
+</ul>
+<h4 id="6-他们的这项工作做的好，为啥好呢？他们是用什么理论证明的呢？（可能涉及方法正确性、性能、安全性）"><a href="#6-他们的这项工作做的好，为啥好呢？他们是用什么理论证明的呢？（可能涉及方法正确性、性能、安全性）" class="headerlink" title="6.他们的这项工作做的好，为啥好呢？他们是用什么理论证明的呢？（可能涉及方法正确性、性能、安全性）"></a>6.他们的这项工作做的好，为啥好呢？他们是用什么理论证明的呢？（可能涉及方法正确性、性能、安全性）</h4><p><strong>大致过程：</strong>（第r轮训练过程）</p>
+<ul>
+<li><strong>客户端计算本地更新</strong>：每个客户端使用隐私数据集训练本地模型，得到本地更新值$\Delta \hat \theta ^{r+1}$，之后对本地更新值使用高斯LDP添加噪声得到$\Delta \hat \theta ^{r+1}_{n,ldp}$，发送给服务器。</li>
+<li><strong>服务器梯度聚合</strong>：通过联邦聚合算法对各合法客户端的本地更新值进行聚合，得到全局参数梯度$\Delta \hat \theta ^{r+1}$，返回给客户端。</li>
+<li><strong>服务器传递需要审计的参数</strong>：服务器会向序号为n的客户端传递序号为1~n的客户端的上一轮加噪后的本地更新值，即$\Delta \hat \theta ^{r}_{i,ldp} , i \epsilon  {1,2,…,n}$，用于实现客户端参数审计。</li>
+<li><strong>客户端参数审计：</strong>客户端n接收到序号为1~n-1客户端的$\Delta \hat \theta ^{r}_{i,ldp} $后，依次将这些参数代入模型，使用自己的隐私数据集计算全局模型与代入后模型的Accuracy差值，再将这n-1个Accuracy差值发送给服务器。</li>
+<li><strong>服务器阈值筛选</strong>：服务器接收到客户端n发送的Accuracy差值后，对客户端1~n-1计算贡献值$c^r_i,i \epsilon  {1,2,…,n-1}$，淘汰贡献值低于阈值的客户端；</li>
+</ul>
+<p><strong>具体细节：</strong></p>
+<ul>
+<li><p>贡献评估：提出了基于参数审计的方案，允许每个客户端审计本地更新；</p>
+<ul>
+<li><strong>Accuracy差值评估</strong>：在第r轮，客户端n使用自己的隐私数据集计算Accuray来对客户端i进行参数审计（i&lt;n），用代入全局参数得到的Acc  减去代入客户端i的本地参数得到的Acc，得到客户端n对客户端i的参数审计结果。具体计算如下：</li>
+</ul>
+<img src="https://s2.loli.net/2022/07/21/aRMoxyCDWbAtKfv.png" alt="image-20220721233146431" style="zoom:80%;" />
+
+<ul>
+<li><strong>阈值筛选</strong>：客户端n将梯度以及对1~n-1号客户端的所有审计结果<img src="https://s2.loli.net/2022/07/21/GYv1W8HK9MlgpEc.png" alt="image-20220721233458196" style="zoom:80%;" />上传到服务器，服务器进行阈值筛选，计算：</li>
+</ul>
+<img src="https://s2.loli.net/2022/07/21/9xzwkujGapRgnYB.png" alt="image-20220721121735413" style="zoom: 67%;" />
+
+<img src="https://s2.loli.net/2022/07/21/rZNUuPkdVlC2IDA.png" alt="image-20220721121801476" style="zoom: 67%;" />
+
+<pre><code>  如果客户端i的$c_i^r &lt; \frac&#123;1&#125;&#123;\beta \times N&#125;（阈值量）$，则贡献低于阈值，该客户端被判断为Free Riders淘汰。
+</code></pre>
+</li>
+<li><p>隐私保护策略：</p>
+<ul>
+<li><p><strong>高斯本地差分隐私</strong>：对传输的梯度进行保护，防止梯度泄露攻击。</p>
+<img src="https://s2.loli.net/2022/07/21/Ifqn4Qspj1aVXil.png" alt="image-20220721121220367" style="zoom: 67%;" />
+
+<p>其中<img src="https://s2.loli.net/2022/07/21/23vIxbnhO9uVSmR.png" alt="image-20220721121506763" style="zoom: 67%;" /></p>
+</li>
+<li><p><strong>参数剪枝</strong>：为了降低传输复杂度，采用参数剪枝，提供传输效率</p>
+<img src="https://s2.loli.net/2022/07/21/BnbIYAMd4LptrFD.png" alt="image-20220721121425857" style="zoom:80%;" /></li>
+</ul>
+</li>
+</ul>
+<h4 id="7-怎么用实验来证明他们的工作的优势？简单的说，他们是怎么设计实验的？"><a href="#7-怎么用实验来证明他们的工作的优势？简单的说，他们是怎么设计实验的？" class="headerlink" title="7.怎么用实验来证明他们的工作的优势？简单的说，他们是怎么设计实验的？"></a>7.怎么用实验来证明他们的工作的优势？简单的说，他们是怎么设计实验的？</h4><ul>
+<li><p>数据集：使用MNIST [27]和Cifar10 [28]作为标准分类基线数据集。MNIST 包含 10 个类的手写数字，已成为分类任务中最知名和最常用的数据集。Cifar10 由 10 类 32x32 图像和三个 RGB 信道组成，由 50，000 个训练样本和 10，000 个测试样本组成。</p>
+</li>
+<li><p>基线：利用目前较为先进的方法作为本实验的基线，通过与它们的对比来展现本方案的优势。</p>
+<ul>
+<li><p>FR攻击基线：Fraboni等人提出了一种变相的搭便车攻击，使用不同回合的参数偏差和随机高斯噪声乘以几个系数，如如下方程所示。他们实现了与公平客户几乎相同的精度曲线。</p>
+<img src="https://s2.loli.net/2022/07/22/SncgyDCMN6wuBAz.png" alt="image-20220722001554952" style="zoom:80%;" />
+</li>
+<li><p>防御模型基线：将RFFL、Media 、Trimmed Median 和 SignSGD 作为比较实验防御模型。</p>
+</li>
+</ul>
+</li>
+<li><p>实验设置</p>
+<ul>
+<li><p>联邦学习：模型对MNIST采用2层CNN，对CIFAR10采用3层CNN。优化器采用SGD，学习率为0.1，轮数为200，聚合算法采用联邦平均。数据集有独立同分布和非独立同分布两种。</p>
+</li>
+<li><p>FR攻击：根据FR客户端比例不同以及数据集种类和分布不同设置多种场景：</p>
+<img src="https://s2.loli.net/2022/07/22/9qNtd1e5yZSP8DA.png" alt="image-20220722002439488" style="zoom:80%;" />
+
+<img src="https://s2.loli.net/2022/07/22/CHr3nyNsLlfOYPd.png" alt="image-20220722002458804" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>评估指标</p>
+<ul>
+<li><p>DLG（梯度泄露攻击）评估：通过重建数据和原始数据之间的均方误差（MSE）来衡量数据还原程度。MSE越高抗DLG效果越好。</p>
+</li>
+<li><p>PASS评估：防御成功率（DSR）衡量防御系统有效性；误报率（FPR）衡量对SFR攻击 的防御性能，FPR表示正常客户端被移除的概率。好的系统应有较高的DSR和较低的FPR。</p>
+<img src="https://s2.loli.net/2022/07/29/mqNT3OWlGtfraVe.png" alt="image-20220722003450694" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>实验结果：</p>
+<p>隐私保护性：</p>
+<img src="https://s2.loli.net/2022/07/29/hwSVNdZjEeiyYf5.png" alt="image-20220722003652504" style="zoom: 67%;" />
+
+<p>抗FR效果：</p>
+<img src="https://s2.loli.net/2022/07/29/V46KyecEBrQUMzO.png" alt="image-20220722003739266" style="zoom: 67%;" /></li>
+</ul>
+<h4 id="8-针对这项工作，作者未来还打算怎么做呢？具体说了哪些呢？有一些“展望”"><a href="#8-针对这项工作，作者未来还打算怎么做呢？具体说了哪些呢？有一些“展望”" class="headerlink" title="8.针对这项工作，作者未来还打算怎么做呢？具体说了哪些呢？有一些“展望”"></a>8.针对这项工作，作者未来还打算怎么做呢？具体说了哪些呢？有一些“展望”</h4><ul>
+<li>暂时未发现作者明确的未来展望。</li>
+</ul>
+<h4 id="9-这项工作的idea与哪些论文有一脉相承的关系呢？或者说，你感觉这篇论文的作者是看了哪些论文，才想到这项工作的idea呢？"><a href="#9-这项工作的idea与哪些论文有一脉相承的关系呢？或者说，你感觉这篇论文的作者是看了哪些论文，才想到这项工作的idea呢？" class="headerlink" title="9.这项工作的idea与哪些论文有一脉相承的关系呢？或者说，你感觉这篇论文的作者是看了哪些论文，才想到这项工作的idea呢？"></a>9.这项工作的idea与哪些论文有一脉相承的关系呢？或者说，你感觉这篇论文的作者是看了哪些论文，才想到这项工作的idea呢？</h4><ul>
+<li><p>研究free rider attack的工作[6] [7] [8]，给出了FR攻击的攻击方式和敌手假设等。</p>
+<p>[6]Y. Fraboni, R. Vidal, and M. Lorenzi, “Free-rider Attacks on Model Aggregation in Federated Learning,” in Proceedings of The 24th International Conference on Artificial Intelligence and Statistics, Mar. 2021, pp. 1846–1854. Accessed: Dec. 07, 2021. [Online]. Available: <a target="_blank" rel="noopener" href="https://proceedings.mlr.press/v130/fraboni21a.html">https://proceedings.mlr.press/v130/fraboni21a.html</a></p>
+<p>[7]L. Lyu, H. Yu, J. Zhao, and Q. Yang, “Threats to Federated Learning,” in Federated Learning: Privacy and Incentive, Q. Yang, L. Fan, and H. Yu, Eds. Cham: Springer International Publishing, 2020, pp. 3–16. doi: 10.1007&#x2F;978-3-030-63076-8_1.</p>
+<p>[8]L. Lyu, X. Xu, Q. Wang, and H. Yu, “Collaborative fairness in federated learning,” in Federated Learning, Springer, 2020, pp. 189–204.</p>
+</li>
+<li><p>[16]提出了一种经典先进的抗FR攻击方案RFFL。</p>
+<p>[16]X. Xu and L. Lyu, “A reputation mechanism is all you need: Collaborative fairness and adversarial robustness in federated learning,” 2021.</p>
+</li>
+<li><p>作者自己被IEEE ISCC 2022接收的论文，在这篇文章中作者提出了一种更强的FR攻击–SFR攻击，它也是本方案的防御对象。</p>
+</li>
+<li><p>贡献评估的总结文献[9]，总结了四种评估方法，作者一番对比之后选取了其中的个人表现评估法。</p>
+<p>[9]H. Wang et al., “Attack of the tails: Yes, you really can backdoor federated learning,” Adv. Neural Inf. Process. Syst., vol. 33, pp. 16070–16084, 2020.</p>
+</li>
+<li><p>研究梯度泄露攻击的文章 [14] [20]，作者从中借鉴了本地高斯差分隐私来抵御梯度泄露攻击。</p>
+<p>[14]L. Zhu, Z. Liu, and S. Han, “Deep Leakage from Gradients,” in Advances in Neural Information Processing Systems, 2019, vol. 32. Accessed: Apr. 06, 2022. [Online]. Available: <a target="_blank" rel="noopener" href="https://proceedings.neurips.cc/paper/2019/hash/60a6c4002cc7b29142def8871531281a-Abstract.html">https://proceedings.neurips.cc/paper/2019/hash/60a6c4002cc7b29142def8871531281a-Abstract.html</a></p>
+<p>[20]J. Sun, A. Li, B. Wang, H. Yang, H. Li, and Y. Chen, “Soteria: Provable Defense Against Privacy Leakage in Federated Learning From Representation Perspective,” 2021, pp. 9311–9319. Accessed: Apr. 07, 2022. [Online].Available: <a target="_blank" rel="noopener" href="https://openaccess.thecvf.com/content/CVPR2021/html/Sun_Soteria_Provable_Defense_Against_Privacy_Leakage_in_Federated_Learning_From_CVPR_2021_paper.html">https://openaccess.thecvf.com/content/CVPR2021/html/Sun_Soteria_Provable_Defense_Against_Privacy_Leakage_in_Federated_Learning_From_CVPR_2021_paper.html</a></p>
+</li>
+</ul>
+<h4 id="10-这篇论文的核心参考文献是？这些参考文献都起到了什么作用呢？"><a href="#10-这篇论文的核心参考文献是？这些参考文献都起到了什么作用呢？" class="headerlink" title="10.这篇论文的核心参考文献是？这些参考文献都起到了什么作用呢？"></a>10.这篇论文的核心参考文献是？这些参考文献都起到了什么作用呢？</h4><ul>
+<li>文献[9]：PASS的贡献评估模块是从该文献总结的方法中选取和加工的，采用个人表现法评估。</li>
+<li>文献[14] [20]：PASS的隐私保护策略是从这两个文献当中借鉴的, 利用高斯LDP抵抗梯度泄露攻击。</li>
+</ul>
+<h4 id="11-这项工作，可以拆分为哪些子工作，哪些步骤？每个步骤，或者每个子工作使用了哪些工具或者方法去完成的呢？画一个包含步骤和工具的类似流程图的东西"><a href="#11-这项工作，可以拆分为哪些子工作，哪些步骤？每个步骤，或者每个子工作使用了哪些工具或者方法去完成的呢？画一个包含步骤和工具的类似流程图的东西" class="headerlink" title="11.这项工作，可以拆分为哪些子工作，哪些步骤？每个步骤，或者每个子工作使用了哪些工具或者方法去完成的呢？画一个包含步骤和工具的类似流程图的东西"></a>11.这项工作，可以拆分为哪些子工作，哪些步骤？每个步骤，或者每个子工作使用了哪些工具或者方法去完成的呢？画一个包含步骤和工具的类似流程图的东西</h4><p>PASS的架构图如下：</p>
+<img src="https://s2.loli.net/2022/07/29/o41fnvJwktigTQh.png" alt="image-20220722005154638" style="zoom: 80%;" />
+
+<p>PASS的算法步骤图如下：</p>
+<img src="https://s2.loli.net/2022/07/29/Ro1NDZE5FhbndkO.png" alt="image-20220722010202060" style="zoom:67%;" />
+
+<img src="https://s2.loli.net/2022/07/29/dgZDjSV4TLBoIEz.png" alt="image-20220722010239256" style="zoom:67%;" />
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/03/24/article-title/" data-id="clfm5djq90000h4oe6h320bds" data-title="Test" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2023/03/24/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hello World</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">March 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/03/24/article-title/">Test</a>
+          </li>
+        
+          <li>
+            <a href="/2023/03/24/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
