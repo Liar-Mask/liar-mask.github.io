@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="那就做自己的神明，做自己的底气">
-    <title>标签: Fedrated Learning - 那就做自己的神明，做自己的底气</title>
+    <title>论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案 - 那就做自己的神明，做自己的底气</title>
     <meta name="author" content="Drokish">
     
     
@@ -15,14 +15,38 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{}</script>
-    <meta property="og:type" content="blog">
-<meta property="og:title" content="那就做自己的神明，做自己的底气">
-<meta property="og:url" content="http://drokish.com/tags/Fedrated-Learning/index.html">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Drokish","sameAs":["https://github.com/","mailto:gx.zhu@foxmail.com"],"image":"author.jpg"},"articleBody":"《PASS: Parameters Audit-based Secure and Fair Federated Learning Scheme against Free Rider》\n\nAuthor：Jianhua Wang\nOnline Available：https://arxiv.org/abs/2207.07292\n2022.7.29-ZGX\n\n1.他们为什么做这项工作？（做这项工作的背景和目的）FL系统脆弱，无法抵御Free-Rider (FR) attack（搭便车攻击），这会导致隐私泄露，并降低FL系统性能。现有的防御机制仅涉及FR敌手占总客户端数量少于50%的场景，且不能抵御自私FR（SFR)。\n\n\n2. 针对这项工作，别人做过了哪些工作，有哪些缺陷？\n以往的防御方案：\n\n专注于客户端贡献评估，贡献程度通过全局更新与本地更新的相似度来衡量。这些方案认为有用的本地更新值一定和全局更新值相似。\n缺陷：这种贡献评估的方法难以检测自私FR（SFR)，SFR使用公共数据集训练模型参与联邦学习，难以检测。\n\n\n贡献评估方法：\n\n主要从数据质量和数据数量两方面。数据数量能够被FR伪造；传统的数据质量评估有隐私数据泄露的风险。\nLiu等总结了四种贡献评估方法：自我报告（self-report）、utility game、沙普利值（Shapley value）和个人表现（individual performance）\n缺陷：\n自我报告面临和数据数量评估一样的问题，容易被FR伪造；\nutility game 受参与FL系统的先后次序的影响；\n沙普利值通信开销太大且有数据泄露风险。\n\n\n因此，个人表现评估是四者中最直观合理的贡献评估方法。基于这个想法，我们提出了通过传输本地更新值到每一个客户端进行参数审计的贡献评估方案。\n\n\n隐私保护相关工作：\n\n研究发现敌手能够通过每轮训练的梯度重建出隐私输入数据。（梯度泄露攻击）\n通过相关研究的探索和作者的实验发现，在本地侧使用方差为、均值为0的高斯噪声可以较好地保护数据免受梯度泄露攻击侵扰（高斯LDP方案）。此外，高斯LDP对FL模型的性能影响较小。\n\n\n\n3.他们大概是怎么做这项工作的？（一两句话概括）\nPASS主要由两个模块组成，隐私保护策略和贡献评估。贡献值低于阈值的客户端将被淘汰。\n贡献评估：\n提出了基于参数审计的方案，允许每个客户端审计本地更新。\n贡献采用Accuracy差值评估，如果贡献低于阈值，则该客户端被判断为Free Riders淘汰。\n\n\n隐私保护策略：\n采用高斯本地差分隐私对传输的参数进行保护，防止梯度泄露攻击。\n\n同时，为了降低传输复杂度，采用参数剪枝，提供传输效率。\n\n\n\n\n\n\n4.他们的这项工作，做的好不好？好在哪里？有如下优点：\n\n在敌手占客户端总数超过50%的情况下也拥有抵抗力；\n能有效对抗匿名FR攻击和自私FR攻击；\n采用高斯本地差分隐私，能在几乎不损失系统准确性的情况下防止隐私泄露；\n与同类型防御方案相比，本方案与RFFL水平相同，拥有比其他方案更低的假阳率。\n\n5.他们这项工作，有没有不好之处，不好在哪里？\n对于不同客户端，隐私数据集的数据分布之间可能存在差异，会影响客户端参数审计的准确度和公平性，如何削减或消除这一消极影响作者未考虑。\n参数审计时，无法防范客户端的恶意行为，例如：\n客户端共谋：多个恶意客户端之间互相审计时，相互包庇遮掩，上传虚假的Acc贡献值给服务器，使得服务器无法检测出非法客户端。\n客户端污蔑：恶意客户端在审计正常客户端时，上传极低的Acc贡献值给服务器，使得服务器错误地将正常客户端判别为FR并将其淘汰。\n\n\n没有给出防御自私FR（SFR）的针对性的设计说明。\n隐私保护策略中的高斯本地差分隐私术沿用前人方案，没有太多创新。\n\n6.他们的这项工作做的好，为啥好呢？他们是用什么理论证明的呢？（可能涉及方法正确性、性能、安全性）大致过程：（第r轮训练过程）\n\n客户端计算本地更新：每个客户端使用隐私数据集训练本地模型，得到本地更新值，之后对本地更新值使用高斯LDP添加噪声得到，发送给服务器。\n服务器梯度聚合：通过联邦聚合算法对各合法客户端的本地更新值进行聚合，得到全局参数梯度，返回给客户端。\n服务器传递需要审计的参数：服务器会向序号为n的客户端传递序号为1~n的客户端的上一轮加噪后的本地更新值，即，用于实现客户端参数审计。\n客户端参数审计：客户端n接收到序号为1~n-1客户端的后，依次将这些参数代入模型，使用自己的隐私数据集计算全局模型与代入后模型的Accuracy差值，再将这n-1个Accuracy差值发送给服务器。\n服务器阈值筛选：服务器接收到客户端n发送的Accuracy差值后，对客户端1~n-1计算贡献值，淘汰贡献值低于阈值的客户端；\n\n具体细节：\n\n贡献评估：提出了基于参数审计的方案，允许每个客户端审计本地更新；\n\nAccuracy差值评估：在第r轮，客户端n使用自己的隐私数据集计算Accuray来对客户端i进行参数审计（i&lt;n），用代入全局参数得到的Acc  减去代入客户端i的本地参数得到的Acc，得到客户端n对客户端i的参数审计结果。具体计算如下：\n\n\n\n\n阈值筛选：客户端n将梯度以及对1~n-1号客户端的所有审计结果上传到服务器，服务器进行阈值筛选，计算：\n\n\n\n\n\n​      如果客户端i的（阈值量），则贡献低于阈值，该客户端被判断为Free Riders淘汰。\n\n隐私保护策略：\n\n高斯本地差分隐私：对传输的梯度进行保护，防止梯度泄露攻击。\n\n\n其中\n\n参数剪枝：为了降低传输复杂度，采用参数剪枝，提供传输效率\n\n\n\n\n7.怎么用实验来证明他们的工作的优势？简单的说，他们是怎么设计实验的？\n数据集：使用MNIST [27]和Cifar10 [28]作为标准分类基线数据集。MNIST 包含 10 个类的手写数字，已成为分类任务中最知名和最常用的数据集。Cifar10 由 10 类 32x32 图像和三个 RGB 信道组成，由 50，000 个训练样本和 10，000 个测试样本组成。\n\n基线：利用目前较为先进的方法作为本实验的基线，通过与它们的对比来展现本方案的优势。\n\nFR攻击基线：Fraboni等人提出了一种变相的搭便车攻击，使用不同回合的参数偏差和随机高斯噪声乘以几个系数，如如下方程所示。他们实现了与公平客户几乎相同的精度曲线。\n\n\n防御模型基线：将RFFL、Media 、Trimmed Median 和 SignSGD 作为比较实验防御模型。\n\n\n\n实验设置\n\n联邦学习：模型对MNIST采用2层CNN，对CIFAR10采用3层CNN。优化器采用SGD，学习率为0.1，轮数为200，聚合算法采用联邦平均。数据集有独立同分布和非独立同分布两种。\n\nFR攻击：根据FR客户端比例不同以及数据集种类和分布不同设置多种场景：\n\n\n\n\n\n评估指标\n\nDLG（梯度泄露攻击）评估：通过重建数据和原始数据之间的均方误差（MSE）来衡量数据还原程度。MSE越高抗DLG效果越好。\n\nPASS评估：防御成功率（DSR）衡量防御系统有效性；误报率（FPR）衡量对SFR攻击 的防御性能，FPR表示正常客户端被移除的概率。好的系统应有较高的DSR和较低的FPR。\n\n\n\n实验结果：\n隐私保护性：\n\n\n抗FR效果：\n\n\n8.针对这项工作，作者未来还打算怎么做呢？具体说了哪些呢？有一些“展望”\n暂时未发现作者明确的未来展望。\n\n9.这项工作的idea与哪些论文有一脉相承的关系呢？或者说，你感觉这篇论文的作者是看了哪些论文，才想到这项工作的idea呢？\n研究free rider attack的工作[6] [7] [8]，给出了FR攻击的攻击方式和敌手假设等。\n[6]Y. Fraboni, R. Vidal, and M. Lorenzi, “Free-rider Attacks on Model Aggregation in Federated Learning,” in Proceedings of The 24th International Conference on Artificial Intelligence and Statistics, Mar. 2021, pp. 1846–1854. Accessed: Dec. 07, 2021. [Online]. Available: https://proceedings.mlr.press/v130/fraboni21a.html\n[7]L. Lyu, H. Yu, J. Zhao, and Q. Yang, “Threats to Federated Learning,” in Federated Learning: Privacy and Incentive, Q. Yang, L. Fan, and H. Yu, Eds. Cham: Springer International Publishing, 2020, pp. 3–16. doi: 10.1007/978-3-030-63076-8_1.\n[8]L. Lyu, X. Xu, Q. Wang, and H. Yu, “Collaborative fairness in federated learning,” in Federated Learning, Springer, 2020, pp. 189–204.\n\n[16]提出了一种经典先进的抗FR攻击方案RFFL。\n[16]X. Xu and L. Lyu, “A reputation mechanism is all you need: Collaborative fairness and adversarial robustness in federated learning,” 2021.\n\n作者自己被IEEE ISCC 2022接收的论文，在这篇文章中作者提出了一种更强的FR攻击–SFR攻击，它也是本方案的防御对象。\n\n贡献评估的总结文献[9]，总结了四种评估方法，作者一番对比之后选取了其中的个人表现评估法。\n[9]H. Wang et al., “Attack of the tails: Yes, you really can backdoor federated learning,” Adv. Neural Inf. Process. Syst., vol. 33, pp. 16070–16084, 2020.\n\n研究梯度泄露攻击的文章 [14] [20]，作者从中借鉴了本地高斯差分隐私来抵御梯度泄露攻击。\n[14]L. Zhu, Z. Liu, and S. Han, “Deep Leakage from Gradients,” in Advances in Neural Information Processing Systems, 2019, vol. 32. Accessed: Apr. 06, 2022. [Online]. Available: https://proceedings.neurips.cc/paper/2019/hash/60a6c4002cc7b29142def8871531281a-Abstract.html\n[20]J. Sun, A. Li, B. Wang, H. Yang, H. Li, and Y. Chen, “Soteria: Provable Defense Against Privacy Leakage in Federated Learning From Representation Perspective,” 2021, pp. 9311–9319. Accessed: Apr. 07, 2022. [Online].Available: https://openaccess.thecvf.com/content/CVPR2021/html/Sun_Soteria_Provable_Defense_Against_Privacy_Leakage_in_Federated_Learning_From_CVPR_2021_paper.html\n\n\n10.这篇论文的核心参考文献是？这些参考文献都起到了什么作用呢？\n文献[9]：PASS的贡献评估模块是从该文献总结的方法中选取和加工的，采用个人表现法评估。\n文献[14] [20]：PASS的隐私保护策略是从这两个文献当中借鉴的, 利用高斯LDP抵抗梯度泄露攻击。\n\n11.这项工作，可以拆分为哪些子工作，哪些步骤？每个步骤，或者每个子工作使用了哪些工具或者方法去完成的呢？画一个包含步骤和工具的类似流程图的东西PASS的架构图如下：\n\n\nPASS的算法步骤图如下：\n\n\n","dateCreated":"2023-03-25T23:15:51+08:00","dateModified":"2023-03-27T14:49:23+08:00","datePublished":"2023-03-25T23:15:51+08:00","description":"《PASS: Parameters Audit-based Secure and Fair Federated Learning Scheme against Free Rider》\n\nAuthor：Jianhua Wang\nOnline Available：https://arxiv.org/abs/2207.07292\n2022.7.29-ZGX\n\n1.他们为什么做这项工作？（做这项工作的背景和目的）FL系统脆弱，无法抵御Free-Rider (FR) attack（搭便车攻击），这会导致隐私泄露，并降低FL系统性能。现有的防御机制仅涉及FR敌手占总客户端数量少于50%的场景，且不能抵御自私FR（SFR)。","headline":"论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"http://drokish.com/2023/03/25/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/"},"publisher":{"@type":"Organization","name":"Drokish","sameAs":["https://github.com/","mailto:gx.zhu@foxmail.com"],"image":"author.jpg","logo":{"@type":"ImageObject","url":"author.jpg"}},"url":"http://drokish.com/2023/03/25/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/","keywords":"AI安全, 联邦学习, Free Riders"}</script>
+    <meta name="description" content="FL系统脆弱，无法抵御Free-Rider (FR) attack（搭便车攻击），这会导致隐私泄露，并降低FL系统性能，这篇论文通过隐私保护策略和贡献评估方案实现了抗Free Rider的安全公平联邦学习方案。">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案">
+<meta property="og:url" content="http://drokish.com/2023/03/25/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/index.html">
 <meta property="og:site_name" content="那就做自己的神明，做自己的底气">
+<meta property="og:description" content="FL系统脆弱，无法抵御Free-Rider (FR) attack（搭便车攻击），这会导致隐私泄露，并降低FL系统性能，这篇论文通过隐私保护策略和贡献评估方案实现了抗Free Rider的安全公平联邦学习方案。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2022/07/21/aRMoxyCDWbAtKfv.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/21/GYv1W8HK9MlgpEc.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/21/9xzwkujGapRgnYB.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/21/rZNUuPkdVlC2IDA.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/21/Ifqn4Qspj1aVXil.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/21/23vIxbnhO9uVSmR.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/21/BnbIYAMd4LptrFD.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/22/SncgyDCMN6wuBAz.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/22/9qNtd1e5yZSP8DA.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/22/CHr3nyNsLlfOYPd.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/29/mqNT3OWlGtfraVe.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/29/hwSVNdZjEeiyYf5.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/29/V46KyecEBrQUMzO.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/29/o41fnvJwktigTQh.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/29/Ro1NDZE5FhbndkO.png">
+<meta property="og:image" content="https://s2.loli.net/2022/07/29/dgZDjSV4TLBoIEz.png">
+<meta property="article:published_time" content="2023-03-25T15:15:51.000Z">
+<meta property="article:modified_time" content="2023-03-27T06:49:23.203Z">
 <meta property="article:author" content="Drokish">
+<meta property="article:tag" content="AI安全">
+<meta property="article:tag" content="联邦学习">
+<meta property="article:tag" content="Free Riders">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/07/21/aRMoxyCDWbAtKfv.png">
     
     
         
@@ -43,7 +67,121 @@
     
 
     
-</head>
+        
+    
+<style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
 
     <body>
         <div id="blog">
@@ -56,7 +194,7 @@
         
     
 
-<header id="header" data-behavior="2">
+<header id="header" data-behavior="5">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
         <a
@@ -89,7 +227,7 @@
         
     
 
-<nav id="sidebar" data-behavior="2">
+<nav id="sidebar" data-behavior="5">
     <div class="sidebar-container">
         
             <div class="sidebar-profile">
@@ -253,33 +391,25 @@
 </nav>
 
             
-            <div id="main" data-behavior="2"
+            <div id="main" data-behavior="5"
                  class="
                         hasCoverMetaIn
                         ">
                 
-    <section class="postShorten-group main-content-wrap">
+<article class="post">
     
     
-    <article class="postShorten postShorten--thumbnailimg-bottom">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2023/03/24/article-title/"
-                            aria-label=": 论文理解：基于参数审计的抗Free Rider安全公平联邦学习"
-                        >
-                            论文理解：基于参数审计的抗Free Rider安全公平联邦学习
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2023-03-24T14:12:01+08:00">
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2023-03-25T23:15:51+08:00">
 	
-		    3月 24, 2023
+		    3月 25, 2023
     	
     </time>
     
@@ -291,16 +421,21 @@
     
 </div>
 
-            </div>
-            
-                <div class="postShorten-content">
-                    <h3 id="论文理解：基于参数审计的抗Free-Rider安全公平联邦学习方案"><a href="#论文理解：基于参数审计的抗Free-Rider安全公平联邦学习方案" class="headerlink" title="论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案"></a>论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案</h3><p>《PASS: Parameters Audit-based Secure and Fair Federated Learning Scheme against Free Rider》</p>
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>《PASS: Parameters Audit-based Secure and Fair Federated Learning Scheme against Free Rider》</p>
 <blockquote>
 <p>Author：Jianhua Wang</p>
 <p>Online Available：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2207.07292">https://arxiv.org/abs/2207.07292</a></p>
 <p>2022.7.29-ZGX</p>
 </blockquote>
 <h4 id="1-他们为什么做这项工作？（做这项工作的背景和目的）"><a href="#1-他们为什么做这项工作？（做这项工作的背景和目的）" class="headerlink" title="1.他们为什么做这项工作？（做这项工作的背景和目的）"></a>1.他们为什么做这项工作？（做这项工作的背景和目的）</h4><p>FL系统脆弱，无法抵御Free-Rider (FR) attack（搭便车攻击），这会导致隐私泄露，并降低FL系统性能。现有的防御机制仅涉及FR敌手占总客户端数量少于50%的场景，且不能抵御自私FR（SFR)。</p>
+<span id="more"></span>
+
 <h4 id="2-针对这项工作，别人做过了哪些工作，有哪些缺陷？"><a href="#2-针对这项工作，别人做过了哪些工作，有哪些缺陷？" class="headerlink" title="2. 针对这项工作，别人做过了哪些工作，有哪些缺陷？"></a>2. 针对这项工作，别人做过了哪些工作，有哪些缺陷？</h4><ul>
 <li><p>以往的防御方案：</p>
 <ul>
@@ -385,8 +520,7 @@
 
 <img src="https://s2.loli.net/2022/07/21/rZNUuPkdVlC2IDA.png" alt="image-20220721121801476" style="zoom: 67%;">
 
-<pre><code>  如果客户端i的$c_i^r &lt; \frac{1}{\beta \times N}（阈值量）$，则贡献低于阈值，该客户端被判断为Free Riders淘汰。
-</code></pre>
+<p>​      如果客户端i的<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -1.091ex;" xmlns="http://www.w3.org/2000/svg" width="20.784ex" height="3.048ex" role="img" focusable="false" viewBox="0 -864.9 9186.7 1347.1"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msubsup"><g data-mml-node="mi"><path data-c="1D450" d="M34 159Q34 268 120 355T306 442Q362 442 394 418T427 355Q427 326 408 306T360 285Q341 285 330 295T319 325T330 359T352 380T366 386H367Q367 388 361 392T340 400T306 404Q276 404 249 390Q228 381 206 359Q162 315 142 235T121 119Q121 73 147 50Q169 26 205 26H209Q321 26 394 111Q403 121 406 121Q410 121 419 112T429 98T420 83T391 55T346 25T282 0T202 -11Q127 -11 81 37T34 159Z"></path></g><g data-mml-node="mi" transform="translate(466,363) scale(0.707)"><path data-c="1D45F" d="M21 287Q22 290 23 295T28 317T38 348T53 381T73 411T99 433T132 442Q161 442 183 430T214 408T225 388Q227 382 228 382T236 389Q284 441 347 441H350Q398 441 422 400Q430 381 430 363Q430 333 417 315T391 292T366 288Q346 288 334 299T322 328Q322 376 378 392Q356 405 342 405Q286 405 239 331Q229 315 224 298T190 165Q156 25 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 114 189T154 366Q154 405 128 405Q107 405 92 377T68 316T57 280Q55 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mi" transform="translate(466,-292.2) scale(0.707)"><path data-c="1D456" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path></g></g><g data-mml-node="mo" transform="translate(1112.7,0)"><path data-c="3C" d="M694 -11T694 -19T688 -33T678 -40Q671 -40 524 29T234 166L90 235Q83 240 83 250Q83 261 91 266Q664 540 678 540Q681 540 687 534T694 519T687 505Q686 504 417 376L151 250L417 124Q686 -4 687 -5Q694 -11 694 -19Z"></path></g><g data-mml-node="mfrac" transform="translate(2168.5,0)"><g data-mml-node="mn" transform="translate(832.4,394) scale(0.707)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g><g data-mml-node="mrow" transform="translate(220,-345) scale(0.707)"><g data-mml-node="mi"><path data-c="1D6FD" d="M29 -194Q23 -188 23 -186Q23 -183 102 134T186 465Q208 533 243 584T309 658Q365 705 429 705H431Q493 705 533 667T573 570Q573 465 469 396L482 383Q533 332 533 252Q533 139 448 65T257 -10Q227 -10 203 -2T165 17T143 40T131 59T126 65L62 -188Q60 -194 42 -194H29ZM353 431Q392 431 427 419L432 422Q436 426 439 429T449 439T461 453T472 471T484 495T493 524T501 560Q503 569 503 593Q503 611 502 616Q487 667 426 667Q384 667 347 643T286 582T247 514T224 455Q219 439 186 308T152 168Q151 163 151 147Q151 99 173 68Q204 26 260 26Q302 26 349 51T425 137Q441 171 449 214T457 279Q457 337 422 372Q380 358 347 358H337Q258 358 258 389Q258 396 261 403Q275 431 353 431Z"></path></g><g data-mml-node="mo" transform="translate(566,0)"><path data-c="D7" d="M630 29Q630 9 609 9Q604 9 587 25T493 118L389 222L284 117Q178 13 175 11Q171 9 168 9Q160 9 154 15T147 29Q147 36 161 51T255 146L359 250L255 354Q174 435 161 449T147 471Q147 480 153 485T168 490Q173 490 175 489Q178 487 284 383L389 278L493 382Q570 459 587 475T609 491Q630 491 630 471Q630 464 620 453T522 355L418 250L522 145Q606 61 618 48T630 29Z"></path></g><g data-mml-node="mi" transform="translate(1344,0)"><path data-c="1D441" d="M234 637Q231 637 226 637Q201 637 196 638T191 649Q191 676 202 682Q204 683 299 683Q376 683 387 683T401 677Q612 181 616 168L670 381Q723 592 723 606Q723 633 659 637Q635 637 635 648Q635 650 637 660Q641 676 643 679T653 683Q656 683 684 682T767 680Q817 680 843 681T873 682Q888 682 888 672Q888 650 880 642Q878 637 858 637Q787 633 769 597L620 7Q618 0 599 0Q585 0 582 2Q579 5 453 305L326 604L261 344Q196 88 196 79Q201 46 268 46H278Q284 41 284 38T282 19Q278 6 272 0H259Q228 2 151 2Q123 2 100 2T63 2T46 1Q31 1 31 10Q31 14 34 26T39 40Q41 46 62 46Q130 49 150 85Q154 91 221 362L289 634Q287 635 234 637Z"></path></g></g><rect width="1778.3" height="60" x="120" y="220"></rect></g><g data-mml-node="mi" transform="translate(4186.7,0)"><text data-variant="italic" transform="scale(1,-1)" font-size="884px" font-family="serif" font-style="italic">（</text></g><g data-mml-node="mi" transform="translate(5186.7,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">阈</text></g><g data-mml-node="mi" transform="translate(6186.7,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">值</text></g><g data-mml-node="mi" transform="translate(7186.7,0)"><text data-variant="normal" transform="scale(1,-1)" font-size="884px" font-family="serif">量</text></g><g data-mml-node="mi" transform="translate(8186.7,0)"><text data-variant="italic" transform="scale(1,-1)" font-size="884px" font-family="serif" font-style="italic">）</text></g></g></g></svg></mjx-container>，则贡献低于阈值，该客户端被判断为Free Riders淘汰。</p>
 </li>
 <li><p>隐私保护策略：</p>
 <ul>
@@ -470,40 +604,109 @@
 <img src="https://s2.loli.net/2022/07/29/Ro1NDZE5FhbndkO.png" alt="image-20220722010202060" style="zoom:67%;">
 
 <img src="https://s2.loli.net/2022/07/29/dgZDjSV4TLBoIEz.png" alt="image-20220722010239256" style="zoom:67%;">
-
-                    
-                        
-
-
-                    
-                    
-                        <p>
-                            <a
-                                href="/2023/03/24/article-title/#post-footer"
-                                class="postShorten-excerpt_link link"
-                                aria-label=""
-                            >
-                                评论和共享
-                            </a>
-                        </p>
-                    
-                </div>
             
+
+
         </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
         
-    </article>
-    
-    <div class="pagination-bar">
-    <ul class="pagination">
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">标签</span><br/>
+                
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/AI%E5%AE%89%E5%85%A8/" rel="tag">AI安全</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/Free-Riders/" rel="tag">Free Riders</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0/" rel="tag">联邦学习</a>
+
+            </div>
         
         
-        <li class="pagination-number">第 1 页 共 1 页</li>
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/26/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86%E7%BB%8F%E5%85%B8%E8%AE%BA%E6%96%87%E6%A6%82%E8%A7%88/"
+                    data-tooltip="安全推理系列部分经典论文概览"
+                    aria-label="上一篇: 安全推理系列部分经典论文概览"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
     </ul>
 </div>
 
-</section>
+
+        
+        
+            
+        
+    </div>
+</article>
 
 
+<!-- <div class="main-content-wrap">
+    
+        <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<div id="vcomments"></div>
+<script>
+    new Valine({
+        el: '#vcomments',  
+        appId: 'xxxxxxx',
+        appKey: 'xxxxxxx', 
+        placeholder: '言为心声，字为心画' ,
+        notify: 'false',
+        verity: '',
+        path: window.location.pathname,
+        avatar: 'wavatar',
+        meta: ['nick','mail','link'],
+        pageSize: '10',
+        lang: 'zh-cn',
+        visitor: 'true',
+        highlight: 'true'
+
+    });
+</script>  
+    
+</div> -->
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
         Copyrights &copy; 2023 Drokish. All Rights Reserved.
@@ -511,6 +714,66 @@
 </footer>
 
             </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/03/26/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86%E7%BB%8F%E5%85%B8%E8%AE%BA%E6%96%87%E6%A6%82%E8%A7%88/"
+                    data-tooltip="安全推理系列部分经典论文概览"
+                    aria-label="上一篇: 安全推理系列部分经典论文概览"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+
             
         </div>
         
@@ -570,19 +833,25 @@
                     <div class="media-body">
                         <a
                             class="link-unstyled"
-                            href="http://drokish.com/2023/03/24/hello-world/"
-                            aria-label=": Hello World"
+                            href="http://drokish.com/2023/03/25/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/"
+                            aria-label=": 论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案"
                         >
-                            <h3 class="media-heading">Hello World</h3>
+                            <h3 class="media-heading">论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
                                 
-                                    2023年3月24日
+                                    2023年3月25日
                                 
                             </span>
                         </span>
-                        <div class="media-content hide-xs font-merryweather"></div>
+                        <div class="media-content hide-xs font-merryweather"><p>《PASS: Parameters Audit-based Secure and Fair Federated Learning Scheme against Free Rider》</p>
+<blockquote>
+<p>Author：Jianhua Wang</p>
+<p>Online Available：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2207.07292">https://arxiv.org/abs/2207.07292</a></p>
+<p>2022.7.29-ZGX</p>
+</blockquote>
+<h4 id="1-他们为什么做这项工作？（做这项工作的背景和目的）"><a href="#1-他们为什么做这项工作？（做这项工作的背景和目的）" class="headerlink" title="1.他们为什么做这项工作？（做这项工作的背景和目的）"></a>1.他们为什么做这项工作？（做这项工作的背景和目的）</h4><p>FL系统脆弱，无法抵御Free-Rider (FR) attack（搭便车攻击），这会导致隐私泄露，并降低FL系统性能。现有的防御机制仅涉及FR敌手占总客户端数量少于50%的场景，且不能抵御自私FR（SFR)。</p></div>
                     </div>
                     <div style="clear:both;"></div>
                     <hr>
@@ -593,30 +862,7 @@
                     <div class="media-body">
                         <a
                             class="link-unstyled"
-                            href="http://drokish.com/2023/03/24/article-title/"
-                            aria-label=": 论文理解：基于参数审计的抗Free Rider安全公平联邦学习"
-                        >
-                            <h3 class="media-heading">论文理解：基于参数审计的抗Free Rider安全公平联邦学习</h3>
-                        </a>
-                        <span class="media-meta">
-                            <span class="media-date text-small">
-                                
-                                    2023年3月24日
-                                
-                            </span>
-                        </span>
-                        <div class="media-content hide-xs font-merryweather"></div>
-                    </div>
-                    <div style="clear:both;"></div>
-                    <hr>
-                </div>
-                
-                <div class="media">
-                    
-                    <div class="media-body">
-                        <a
-                            class="link-unstyled"
-                            href="http://drokish.com/2023/03/26/test2/"
+                            href="http://drokish.com/2023/03/26/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86%E7%BB%8F%E5%85%B8%E8%AE%BA%E6%96%87%E6%A6%82%E8%A7%88/"
                             aria-label=": 安全推理系列部分经典论文概览"
                         >
                             <h3 class="media-heading">安全推理系列部分经典论文概览</h3>
@@ -625,6 +871,31 @@
                             <span class="media-date text-small">
                                 
                                     2023年3月26日
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><!-- toc -->
+
+<p>最近看了很多神经网络安全推理的论文，它们彼此借鉴，积淀传承，一同造就了这个深奥有趣的领域，这里权且做个概览记录。</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="http://drokish.com/2023/03/27/%E6%A8%A1%E5%9E%8B%E7%AA%83%E5%8F%96%E6%8A%80%E6%9C%AF%E5%88%86%E6%9E%90/"
+                            aria-label=": 模型窃取技术分析"
+                        >
+                            <h3 class="media-heading">模型窃取技术分析</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2023年3月27日
                                 
                             </span>
                         </span>
@@ -656,6 +927,8 @@
 
 <!--SCRIPTS END-->
 
+
+    
 
 
 
