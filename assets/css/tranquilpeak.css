@@ -55,7 +55,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background: white;
+  background: rgb(251, 232, 162);
   font-family: "Open Sans", sans-serif;
   font-size: 1.6rem;
   line-height: 1.9em;
@@ -75,7 +75,7 @@ h6 {
   font-family: "Open Sans", sans-serif;
   font-weight: 700;
   line-height: 1.45em;
-  color: #4a4a4a; }
+  color: #2a2a2a; }
 
 h1,
 h2,
