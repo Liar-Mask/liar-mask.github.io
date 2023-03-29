@@ -8560,7 +8560,7 @@ blockquote {
 #main {
   display: block;
   min-height: 100%;
-  background: #fff;
+  background: #f7fafff5;
   transition: transform .25s ease-in-out;
   -webkit-transition: -webkit-transform .25s ease-in-out; }
   #main.hasCover.hasCoverCaption, #main.hasCover.hasCoverMetaOut {
@@ -9949,7 +9949,7 @@ a.fancybox {
     text-rendering: optimizelegibility;
     letter-spacing: -0.3px;
     font-family: "Merriweather", serif;
-    color: #5d686f;
+    color: #323639;
     margin-top: 20px;
     font-weight: 400;
     overflow: hidden;
