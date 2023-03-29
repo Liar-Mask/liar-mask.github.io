@@ -73,6 +73,10 @@
 
     
         
+            
+<link rel="stylesheet" href="/assets/css/gitment.css">
+
+        
     
 <style>mjx-container[jax="SVG"] {
   direction: ltr;
@@ -712,6 +716,16 @@ mjx-container[display="true"] + br {
         
         
             
+                <li class="post-action">
+                    <a
+                        class="post-action-btn btn btn--default"
+                        href="#gitment"
+                        aria-label="Leave a comment"
+                    >
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
         
         <li class="post-action">
             
@@ -726,6 +740,8 @@ mjx-container[display="true"] + br {
 
         
         
+            
+                <div id="gitment"></div>
             
         
     </div>
@@ -837,6 +853,16 @@ mjx-container[display="true"] + br {
             </li>
         
         
+            
+                <li class="post-action">
+                    <a
+                        class="post-action-btn btn btn--default"
+                        href="#gitment"
+                        aria-label="Leave a comment"
+                    >
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
             
         
         <li class="post-action">
@@ -1093,6 +1119,23 @@ mjx-container[display="true"] + br {
 <!--SCRIPTS END-->
 
 
+    
+        
+<script src="/assets/js/gitment.js"></script>
+
+        <script type="text/javascript">
+          (function() {
+            new Gitment({
+              id: 'http://drokish.com/2023/03/25/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/',
+              owner: 'Liar-Mask',
+              repo: 'GitmentStorage',
+              oauth: {
+                client_id: '317f2f4800c721aea593',
+                client_secret: '3be142f9ef1372ae209f6ad6205882b893935070'
+              }
+            }).render('gitment')
+          })()
+        </script>
     
 
 

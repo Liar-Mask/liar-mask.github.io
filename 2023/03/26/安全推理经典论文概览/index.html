@@ -62,6 +62,10 @@
 
     
         
+            
+<link rel="stylesheet" href="/assets/css/gitment.css">
+
+        
     
 <style>mjx-container[jax="SVG"] {
   direction: ltr;
@@ -597,6 +601,16 @@ mjx-container[display="true"] + br {
         
         
             
+                <li class="post-action">
+                    <a
+                        class="post-action-btn btn btn--default"
+                        href="#gitment"
+                        aria-label="Leave a comment"
+                    >
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
         
         <li class="post-action">
             
@@ -611,6 +625,8 @@ mjx-container[display="true"] + br {
 
         
         
+            
+                <div id="gitment"></div>
             
         
     </div>
@@ -719,6 +735,16 @@ mjx-container[display="true"] + br {
             </li>
         
         
+            
+                <li class="post-action">
+                    <a
+                        class="post-action-btn btn btn--default"
+                        href="#gitment"
+                        aria-label="Leave a comment"
+                    >
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
             
         
         <li class="post-action">
@@ -975,6 +1001,23 @@ mjx-container[display="true"] + br {
 <!--SCRIPTS END-->
 
 
+    
+        
+<script src="/assets/js/gitment.js"></script>
+
+        <script type="text/javascript">
+          (function() {
+            new Gitment({
+              id: 'http://drokish.com/2023/03/26/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86%E7%BB%8F%E5%85%B8%E8%AE%BA%E6%96%87%E6%A6%82%E8%A7%88/',
+              owner: 'Liar-Mask',
+              repo: 'GitmentStorage',
+              oauth: {
+                client_id: '317f2f4800c721aea593',
+                client_secret: '3be142f9ef1372ae209f6ad6205882b893935070'
+              }
+            }).render('gitment')
+          })()
+        </script>
     
 
 
