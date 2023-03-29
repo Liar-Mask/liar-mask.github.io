@@ -82,7 +82,7 @@
     
         
             
-<link rel="stylesheet" href="/assets/css/gitment.css">
+<link rel="stylesheet" href="/assets/css/gitalk.css">
 
         
     
@@ -623,7 +623,7 @@ mjx-container[display="true"] + br {
                 <li class="post-action">
                     <a
                         class="post-action-btn btn btn--default"
-                        href="#gitment"
+                        href="#gitalk"
                         aria-label="Leave a comment"
                     >
                         <i class="fa fa-comment"></i>
@@ -645,7 +645,8 @@ mjx-container[display="true"] + br {
         
         
             
-                <div id="gitment"></div>
+                <div id="gitalk"></div>
+
             
         
     </div>
@@ -758,7 +759,7 @@ mjx-container[display="true"] + br {
                 <li class="post-action">
                     <a
                         class="post-action-btn btn btn--default"
-                        href="#gitment"
+                        href="#gitalk"
                         aria-label="Leave a comment"
                     >
                         <i class="fa fa-comment"></i>
@@ -1022,19 +1023,19 @@ mjx-container[display="true"] + br {
 
     
         
-<script src="/assets/js/gitment.js"></script>
+<script src="/assets/js/gitalk.js"></script>
 
         <script type="text/javascript">
           (function() {
-            new Gitment({
-              id: 'http://drokish.com/2023/03/26/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86%E7%BB%8F%E5%85%B8%E8%AE%BA%E6%96%87%E6%A6%82%E8%A7%88/',
-              owner: 'Liar-Mask',
+            new Gitalk({
+              clientID: '317f2f4800c721aea593',
+              clientSecret: '3be142f9ef1372ae209f6ad6205882b893935070',
               repo: 'GitmentStorage',
-              oauth: {
-                client_id: '317f2f4800c721aea593',
-                client_secret: '3be142f9ef1372ae209f6ad6205882b893935070'
-              }
-            }).render('gitment')
+              owner: 'Liar-Mask',
+              admin: ['Liar-Mask'],
+              id: '2023/03/26/安全推理经典论文概览/',
+              ...{"language":"zh-CN","perPage":10,"distractionFreeMode":false,"enableHotKey":true,"pagerDirection":"first"}
+            }).render('gitalk')
           })()
         </script>
     

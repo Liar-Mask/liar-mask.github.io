@@ -93,7 +93,7 @@
     
         
             
-<link rel="stylesheet" href="/assets/css/gitment.css">
+<link rel="stylesheet" href="/assets/css/gitalk.css">
 
         
     
@@ -738,7 +738,7 @@ mjx-container[display="true"] + br {
                 <li class="post-action">
                     <a
                         class="post-action-btn btn btn--default"
-                        href="#gitment"
+                        href="#gitalk"
                         aria-label="Leave a comment"
                     >
                         <i class="fa fa-comment"></i>
@@ -760,7 +760,8 @@ mjx-container[display="true"] + br {
         
         
             
-                <div id="gitment"></div>
+                <div id="gitalk"></div>
+
             
         
     </div>
@@ -876,7 +877,7 @@ mjx-container[display="true"] + br {
                 <li class="post-action">
                     <a
                         class="post-action-btn btn btn--default"
-                        href="#gitment"
+                        href="#gitalk"
                         aria-label="Leave a comment"
                     >
                         <i class="fa fa-comment"></i>
@@ -1140,19 +1141,19 @@ mjx-container[display="true"] + br {
 
     
         
-<script src="/assets/js/gitment.js"></script>
+<script src="/assets/js/gitalk.js"></script>
 
         <script type="text/javascript">
           (function() {
-            new Gitment({
-              id: 'http://drokish.com/2023/03/25/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/',
-              owner: 'Liar-Mask',
+            new Gitalk({
+              clientID: '317f2f4800c721aea593',
+              clientSecret: '3be142f9ef1372ae209f6ad6205882b893935070',
               repo: 'GitmentStorage',
-              oauth: {
-                client_id: '317f2f4800c721aea593',
-                client_secret: '3be142f9ef1372ae209f6ad6205882b893935070'
-              }
-            }).render('gitment')
+              owner: 'Liar-Mask',
+              admin: ['Liar-Mask'],
+              id: '2023/03/25/论文笔记-PASS/',
+              ...{"language":"zh-CN","perPage":10,"distractionFreeMode":false,"enableHotKey":true,"pagerDirection":"first"}
+            }).render('gitalk')
           })()
         </script>
     
