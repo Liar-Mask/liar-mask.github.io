@@ -17,11 +17,11 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Drokish","sameAs":["http://wpa.qq.com/msgrd?v=3&uin=2385498525&site=qq&menu=yes","mailto:gx.zhu@foxmail.com","https://github.com/Liar-Mask","#about","/atom.xml"],"image":"author4-2.jpg"},"articleBody":"FL系统脆弱，无法抵御Free-Rider (FR) attack（搭便车攻击），这会导致隐私泄露，并降低FL系统性能，这篇论文通过隐私保护策略和贡献评估方案实现了抗Free Rider的安全公平联邦学习方案。\n\n\n《PASS: Parameters Audit-based Secure and Fair Federated Learning Scheme against Free Rider》\n\nAuthor：Jianhua Wang\nOnline Available：https://arxiv.org/abs/2207.07292\n2022.7.29-ZGX\n\n1.他们为什么做这项工作？（做这项工作的背景和目的）FL系统脆弱，无法抵御Free-Rider (FR) attack（搭便车攻击），这会导致隐私泄露，并降低FL系统性能。现有的防御机制仅涉及FR敌手占总客户端数量少于50%的场景，且不能抵御自私FR（SFR)。\n\n\n2. 针对这项工作，别人做过了哪些工作，有哪些缺陷？\n以往的防御方案：\n\n专注于客户端贡献评估，贡献程度通过全局更新与本地更新的相似度来衡量。这些方案认为有用的本地更新值一定和全局更新值相似。\n缺陷：这种贡献评估的方法难以检测自私FR（SFR)，SFR使用公共数据集训练模型参与联邦学习，难以检测。\n\n\n贡献评估方法：\n\n主要从数据质量和数据数量两方面。数据数量能够被FR伪造；传统的数据质量评估有隐私数据泄露的风险。\nLiu等总结了四种贡献评估方法：自我报告（self-report）、utility game、沙普利值（Shapley value）和个人表现（individual performance）\n缺陷：\n自我报告面临和数据数量评估一样的问题，容易被FR伪造；\nutility game 受参与FL系统的先后次序的影响；\n沙普利值通信开销太大且有数据泄露风险。\n\n\n因此，个人表现评估是四者中最直观合理的贡献评估方法。基于这个想法，我们提出了通过传输本地更新值到每一个客户端进行参数审计的贡献评估方案。\n\n\n隐私保护相关工作：\n\n研究发现敌手能够通过每轮训练的梯度重建出隐私输入数据。（梯度泄露攻击）\n通过相关研究的探索和作者的实验发现，在本地侧使用方差为、均值为0的高斯噪声可以较好地保护数据免受梯度泄露攻击侵扰（高斯LDP方案）。此外，高斯LDP对FL模型的性能影响较小。\n\n\n\n3.他们大概是怎么做这项工作的？（一两句话概括）\nPASS主要由两个模块组成，隐私保护策略和贡献评估。贡献值低于阈值的客户端将被淘汰。\n贡献评估：\n提出了基于参数审计的方案，允许每个客户端审计本地更新。\n贡献采用Accuracy差值评估，如果贡献低于阈值，则该客户端被判断为Free Riders淘汰。\n\n\n隐私保护策略：\n采用高斯本地差分隐私对传输的参数进行保护，防止梯度泄露攻击。\n\n同时，为了降低传输复杂度，采用参数剪枝，提供传输效率。\n\n\n\n\n\n\n4.他们的这项工作，做的好不好？好在哪里？有如下优点：\n\n在敌手占客户端总数超过50%的情况下也拥有抵抗力；\n能有效对抗匿名FR攻击和自私FR攻击；\n采用高斯本地差分隐私，能在几乎不损失系统准确性的情况下防止隐私泄露；\n与同类型防御方案相比，本方案与RFFL水平相同，拥有比其他方案更低的假阳率。\n\n5.他们这项工作，有没有不好之处，不好在哪里？\n对于不同客户端，隐私数据集的数据分布之间可能存在差异，会影响客户端参数审计的准确度和公平性，如何削减或消除这一消极影响作者未考虑。\n参数审计时，无法防范客户端的恶意行为，例如：\n客户端共谋：多个恶意客户端之间互相审计时，相互包庇遮掩，上传虚假的Acc贡献值给服务器，使得服务器无法检测出非法客户端。\n客户端污蔑：恶意客户端在审计正常客户端时，上传极低的Acc贡献值给服务器，使得服务器错误地将正常客户端判别为FR并将其淘汰。\n\n\n没有给出防御自私FR（SFR）的针对性的设计说明。\n隐私保护策略中的高斯本地差分隐私术沿用前人方案，没有太多创新。\n\n6.他们的这项工作做的好，为啥好呢？他们是用什么理论证明的呢？（可能涉及方法正确性、性能、安全性）大致过程：（第r轮训练过程）\n\n客户端计算本地更新：每个客户端使用隐私数据集训练本地模型，得到本地更新值，之后对本地更新值使用高斯LDP添加噪声得到，发送给服务器。\n服务器梯度聚合：通过联邦聚合算法对各合法客户端的本地更新值进行聚合，得到全局参数梯度，返回给客户端。\n服务器传递需要审计的参数：服务器会向序号为n的客户端传递序号为1~n的客户端的上一轮加噪后的本地更新值，即，用于实现客户端参数审计。\n客户端参数审计：客户端n接收到序号为1~n-1客户端的后，依次将这些参数代入模型，使用自己的隐私数据集计算全局模型与代入后模型的Accuracy差值，再将这n-1个Accuracy差值发送给服务器。\n服务器阈值筛选：服务器接收到客户端n发送的Accuracy差值后，对客户端1~n-1计算贡献值，淘汰贡献值低于阈值的客户端；\n\n具体细节：\n\n贡献评估：提出了基于参数审计的方案，允许每个客户端审计本地更新；\n\nAccuracy差值评估：在第r轮，客户端n使用自己的隐私数据集计算Accuray来对客户端i进行参数审计（i&lt;n），用代入全局参数得到的Acc  减去代入客户端i的本地参数得到的Acc，得到客户端n对客户端i的参数审计结果。具体计算如下：\n\n\n\n\n阈值筛选：客户端n将梯度以及对1~n-1号客户端的所有审计结果上传到服务器，服务器进行阈值筛选，计算：\n\n\n\n\n\n​      如果客户端i的（阈值量），则贡献低于阈值，该客户端被判断为Free Riders淘汰。\n\n隐私保护策略：\n\n高斯本地差分隐私：对传输的梯度进行保护，防止梯度泄露攻击。\n\n\n其中\n\n参数剪枝：为了降低传输复杂度，采用参数剪枝，提供传输效率\n\n\n\n\n7.怎么用实验来证明他们的工作的优势？简单的说，他们是怎么设计实验的？\n数据集：使用MNIST [27]和Cifar10 [28]作为标准分类基线数据集。MNIST 包含 10 个类的手写数字，已成为分类任务中最知名和最常用的数据集。Cifar10 由 10 类 32x32 图像和三个 RGB 信道组成，由 50，000 个训练样本和 10，000 个测试样本组成。\n\n基线：利用目前较为先进的方法作为本实验的基线，通过与它们的对比来展现本方案的优势。\n\nFR攻击基线：Fraboni等人提出了一种变相的搭便车攻击，使用不同回合的参数偏差和随机高斯噪声乘以几个系数，如如下方程所示。他们实现了与公平客户几乎相同的精度曲线。\n\n\n防御模型基线：将RFFL、Media 、Trimmed Median 和 SignSGD 作为比较实验防御模型。\n\n\n\n实验设置\n\n联邦学习：模型对MNIST采用2层CNN，对CIFAR10采用3层CNN。优化器采用SGD，学习率为0.1，轮数为200，聚合算法采用联邦平均。数据集有独立同分布和非独立同分布两种。\n\nFR攻击：根据FR客户端比例不同以及数据集种类和分布不同设置多种场景：\n\n\n\n\n\n评估指标\n\nDLG（梯度泄露攻击）评估：通过重建数据和原始数据之间的均方误差（MSE）来衡量数据还原程度。MSE越高抗DLG效果越好。\n\nPASS评估：防御成功率（DSR）衡量防御系统有效性；误报率（FPR）衡量对SFR攻击 的防御性能，FPR表示正常客户端被移除的概率。好的系统应有较高的DSR和较低的FPR。\n\n\n\n实验结果：\n隐私保护性：\n\n\n抗FR效果：\n\n\n8.针对这项工作，作者未来还打算怎么做呢？具体说了哪些呢？有一些“展望”\n暂时未发现作者明确的未来展望。\n\n9.这项工作的idea与哪些论文有一脉相承的关系呢？或者说，你感觉这篇论文的作者是看了哪些论文，才想到这项工作的idea呢？\n研究free rider attack的工作[6] [7] [8]，给出了FR攻击的攻击方式和敌手假设等。\n[6]Y. Fraboni, R. Vidal, and M. Lorenzi, “Free-rider Attacks on Model Aggregation in Federated Learning,” in Proceedings of The 24th International Conference on Artificial Intelligence and Statistics, Mar. 2021, pp. 1846–1854. Accessed: Dec. 07, 2021. [Online]. Available: https://proceedings.mlr.press/v130/fraboni21a.html\n[7]L. Lyu, H. Yu, J. Zhao, and Q. Yang, “Threats to Federated Learning,” in Federated Learning: Privacy and Incentive, Q. Yang, L. Fan, and H. Yu, Eds. Cham: Springer International Publishing, 2020, pp. 3–16. doi: 10.1007/978-3-030-63076-8_1.\n[8]L. Lyu, X. Xu, Q. Wang, and H. Yu, “Collaborative fairness in federated learning,” in Federated Learning, Springer, 2020, pp. 189–204.\n\n[16]提出了一种经典先进的抗FR攻击方案RFFL。\n[16]X. Xu and L. Lyu, “A reputation mechanism is all you need: Collaborative fairness and adversarial robustness in federated learning,” 2021.\n\n作者自己被IEEE ISCC 2022接收的论文，在这篇文章中作者提出了一种更强的FR攻击–SFR攻击，它也是本方案的防御对象。\n\n贡献评估的总结文献[9]，总结了四种评估方法，作者一番对比之后选取了其中的个人表现评估法。\n[9]H. Wang et al., “Attack of the tails: Yes, you really can backdoor federated learning,” Adv. Neural Inf. Process. Syst., vol. 33, pp. 16070–16084, 2020.\n\n研究梯度泄露攻击的文章 [14] [20]，作者从中借鉴了本地高斯差分隐私来抵御梯度泄露攻击。\n[14]L. Zhu, Z. Liu, and S. Han, “Deep Leakage from Gradients,” in Advances in Neural Information Processing Systems, 2019, vol. 32. Accessed: Apr. 06, 2022. [Online]. Available: https://proceedings.neurips.cc/paper/2019/hash/60a6c4002cc7b29142def8871531281a-Abstract.html\n[20]J. Sun, A. Li, B. Wang, H. Yang, H. Li, and Y. Chen, “Soteria: Provable Defense Against Privacy Leakage in Federated Learning From Representation Perspective,” 2021, pp. 9311–9319. Accessed: Apr. 07, 2022. [Online].Available: https://openaccess.thecvf.com/content/CVPR2021/html/Sun_Soteria_Provable_Defense_Against_Privacy_Leakage_in_Federated_Learning_From_CVPR_2021_paper.html\n\n\n10.这篇论文的核心参考文献是？这些参考文献都起到了什么作用呢？\n文献[9]：PASS的贡献评估模块是从该文献总结的方法中选取和加工的，采用个人表现法评估。\n文献[14] [20]：PASS的隐私保护策略是从这两个文献当中借鉴的, 利用高斯LDP抵抗梯度泄露攻击。\n\n11.这项工作，可以拆分为哪些子工作，哪些步骤？每个步骤，或者每个子工作使用了哪些工具或者方法去完成的呢？画一个包含步骤和工具的类似流程图的东西PASS的架构图如下：\n\n\nPASS的算法步骤图如下：\n\n\n","dateCreated":"2022-03-25T23:15:51+08:00","dateModified":"2023-04-01T12:24:08+08:00","datePublished":"2022-03-25T23:15:51+08:00","description":"FL系统脆弱，无法抵御Free-Rider (FR) attack（搭便车攻击），这会导致隐私泄露，并降低FL系统性能，这篇论文通过隐私保护策略和贡献评估方案实现了抗Free Rider的安全公平联邦学习方案。","headline":"论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案","image":["https://s2.loli.net/2022/07/29/o41fnvJwktigTQh.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://drokish.com/2022/03/25/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/"},"publisher":{"@type":"Organization","name":"Drokish","sameAs":["http://wpa.qq.com/msgrd?v=3&uin=2385498525&site=qq&menu=yes","mailto:gx.zhu@foxmail.com","https://github.com/Liar-Mask","#about","/atom.xml"],"image":"author4-2.jpg","logo":{"@type":"ImageObject","url":"author4-2.jpg"}},"url":"https://drokish.com/2022/03/25/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/","keywords":"AI安全, 联邦学习, Free Riders","thumbnailUrl":"https://s2.loli.net/2022/07/29/o41fnvJwktigTQh.png"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Drokish","sameAs":["http://wpa.qq.com/msgrd?v=3&uin=2385498525&site=qq&menu=yes","mailto:gx.zhu@foxmail.com","https://github.com/Liar-Mask","#about","/atom.xml"],"image":"author4-2.jpg"},"articleBody":"FL系统脆弱，无法抵御Free-Rider (FR) attack（搭便车攻击），这会导致隐私泄露，并降低FL系统性能，这篇论文通过隐私保护策略和贡献评估方案实现了抗Free Rider的安全公平联邦学习方案。\n\n\n《PASS: Parameters Audit-based Secure and Fair Federated Learning Scheme against Free Rider》\n\nAuthor：Jianhua Wang\nOnline Available：https://arxiv.org/abs/2207.07292\n2022.7.29-ZGX\n\n1.他们为什么做这项工作？（做这项工作的背景和目的）FL系统脆弱，无法抵御Free-Rider (FR) attack（搭便车攻击），这会导致隐私泄露，并降低FL系统性能。现有的防御机制仅涉及FR敌手占总客户端数量少于50%的场景，且不能抵御自私FR（SFR)。\n\n\n2. 针对这项工作，别人做过了哪些工作，有哪些缺陷？\n以往的防御方案：\n\n专注于客户端贡献评估，贡献程度通过全局更新与本地更新的相似度来衡量。这些方案认为有用的本地更新值一定和全局更新值相似。\n缺陷：这种贡献评估的方法难以检测自私FR（SFR)，SFR使用公共数据集训练模型参与联邦学习，难以检测。\n\n\n贡献评估方法：\n\n主要从数据质量和数据数量两方面。数据数量能够被FR伪造；传统的数据质量评估有隐私数据泄露的风险。\nLiu等总结了四种贡献评估方法：自我报告（self-report）、utility game、沙普利值（Shapley value）和个人表现（individual performance）\n缺陷：\n自我报告面临和数据数量评估一样的问题，容易被FR伪造；\nutility game 受参与FL系统的先后次序的影响；\n沙普利值通信开销太大且有数据泄露风险。\n\n\n因此，个人表现评估是四者中最直观合理的贡献评估方法。基于这个想法，我们提出了通过传输本地更新值到每一个客户端进行参数审计的贡献评估方案。\n\n\n隐私保护相关工作：\n\n研究发现敌手能够通过每轮训练的梯度重建出隐私输入数据。（梯度泄露攻击）\n通过相关研究的探索和作者的实验发现，在本地侧使用方差为、均值为0的高斯噪声可以较好地保护数据免受梯度泄露攻击侵扰（高斯LDP方案）。此外，高斯LDP对FL模型的性能影响较小。\n\n\n\n3.他们大概是怎么做这项工作的？（一两句话概括）\nPASS主要由两个模块组成，隐私保护策略和贡献评估。贡献值低于阈值的客户端将被淘汰。\n贡献评估：\n提出了基于参数审计的方案，允许每个客户端审计本地更新。\n贡献采用Accuracy差值评估，如果贡献低于阈值，则该客户端被判断为Free Riders淘汰。\n\n\n隐私保护策略：\n采用高斯本地差分隐私对传输的参数进行保护，防止梯度泄露攻击。\n\n同时，为了降低传输复杂度，采用参数剪枝，提供传输效率。\n\n\n\n\n\n\n4.他们的这项工作，做的好不好？好在哪里？有如下优点：\n\n在敌手占客户端总数超过50%的情况下也拥有抵抗力；\n能有效对抗匿名FR攻击和自私FR攻击；\n采用高斯本地差分隐私，能在几乎不损失系统准确性的情况下防止隐私泄露；\n与同类型防御方案相比，本方案与RFFL水平相同，拥有比其他方案更低的假阳率。\n\n5.他们这项工作，有没有不好之处，不好在哪里？\n对于不同客户端，隐私数据集的数据分布之间可能存在差异，会影响客户端参数审计的准确度和公平性，如何削减或消除这一消极影响作者未考虑。\n参数审计时，无法防范客户端的恶意行为，例如：\n客户端共谋：多个恶意客户端之间互相审计时，相互包庇遮掩，上传虚假的Acc贡献值给服务器，使得服务器无法检测出非法客户端。\n客户端污蔑：恶意客户端在审计正常客户端时，上传极低的Acc贡献值给服务器，使得服务器错误地将正常客户端判别为FR并将其淘汰。\n\n\n没有给出防御自私FR（SFR）的针对性的设计说明。\n隐私保护策略中的高斯本地差分隐私术沿用前人方案，没有太多创新。\n\n6.他们的这项工作做的好，为啥好呢？他们是用什么理论证明的呢？（可能涉及方法正确性、性能、安全性）大致过程：（第r轮训练过程）\n\n客户端计算本地更新：每个客户端使用隐私数据集训练本地模型，得到本地更新值，之后对本地更新值使用高斯LDP添加噪声得到，发送给服务器。\n服务器梯度聚合：通过联邦聚合算法对各合法客户端的本地更新值进行聚合，得到全局参数梯度，返回给客户端。\n服务器传递需要审计的参数：服务器会向序号为n的客户端传递序号为1~n的客户端的上一轮加噪后的本地更新值，即，用于实现客户端参数审计。\n客户端参数审计：客户端n接收到序号为1~n-1客户端的后，依次将这些参数代入模型，使用自己的隐私数据集计算全局模型与代入后模型的Accuracy差值，再将这n-1个Accuracy差值发送给服务器。\n服务器阈值筛选：服务器接收到客户端n发送的Accuracy差值后，对客户端1~n-1计算贡献值，淘汰贡献值低于阈值的客户端；\n\n具体细节：\n\n贡献评估：提出了基于参数审计的方案，允许每个客户端审计本地更新；\n\nAccuracy差值评估：在第r轮，客户端n使用自己的隐私数据集计算Accuray来对客户端i进行参数审计（i&lt;n），用代入全局参数得到的Acc  减去代入客户端i的本地参数得到的Acc，得到客户端n对客户端i的参数审计结果。具体计算如下：\n\n\n\n\n阈值筛选：客户端n将梯度以及对1~n-1号客户端的所有审计结果上传到服务器，服务器进行阈值筛选，计算：\n\n\n\n\n\n​      如果客户端i的（阈值量），则贡献低于阈值，该客户端被判断为Free Riders淘汰。\n\n隐私保护策略：\n\n高斯本地差分隐私：对传输的梯度进行保护，防止梯度泄露攻击。\n\n\n其中\n\n参数剪枝：为了降低传输复杂度，采用参数剪枝，提供传输效率\n\n\n\n\n7.怎么用实验来证明他们的工作的优势？简单的说，他们是怎么设计实验的？\n数据集：使用MNIST [27]和Cifar10 [28]作为标准分类基线数据集。MNIST 包含 10 个类的手写数字，已成为分类任务中最知名和最常用的数据集。Cifar10 由 10 类 32x32 图像和三个 RGB 信道组成，由 50，000 个训练样本和 10，000 个测试样本组成。\n\n基线：利用目前较为先进的方法作为本实验的基线，通过与它们的对比来展现本方案的优势。\n\nFR攻击基线：Fraboni等人提出了一种变相的搭便车攻击，使用不同回合的参数偏差和随机高斯噪声乘以几个系数，如如下方程所示。他们实现了与公平客户几乎相同的精度曲线。\n\n\n防御模型基线：将RFFL、Media 、Trimmed Median 和 SignSGD 作为比较实验防御模型。\n\n\n\n实验设置\n\n联邦学习：模型对MNIST采用2层CNN，对CIFAR10采用3层CNN。优化器采用SGD，学习率为0.1，轮数为200，聚合算法采用联邦平均。数据集有独立同分布和非独立同分布两种。\n\nFR攻击：根据FR客户端比例不同以及数据集种类和分布不同设置多种场景：\n\n\n\n\n\n评估指标\n\nDLG（梯度泄露攻击）评估：通过重建数据和原始数据之间的均方误差（MSE）来衡量数据还原程度。MSE越高抗DLG效果越好。\n\nPASS评估：防御成功率（DSR）衡量防御系统有效性；误报率（FPR）衡量对SFR攻击 的防御性能，FPR表示正常客户端被移除的概率。好的系统应有较高的DSR和较低的FPR。\n\n\n\n实验结果：\n隐私保护性：\n\n\n抗FR效果：\n\n\n8.针对这项工作，作者未来还打算怎么做呢？具体说了哪些呢？有一些“展望”\n暂时未发现作者明确的未来展望。\n\n9.这项工作的idea与哪些论文有一脉相承的关系呢？或者说，你感觉这篇论文的作者是看了哪些论文，才想到这项工作的idea呢？\n研究free rider attack的工作[6] [7] [8]，给出了FR攻击的攻击方式和敌手假设等。\n[6]Y. Fraboni, R. Vidal, and M. Lorenzi, “Free-rider Attacks on Model Aggregation in Federated Learning,” in Proceedings of The 24th International Conference on Artificial Intelligence and Statistics, Mar. 2021, pp. 1846–1854. Accessed: Dec. 07, 2021. [Online]. Available: https://proceedings.mlr.press/v130/fraboni21a.html\n[7]L. Lyu, H. Yu, J. Zhao, and Q. Yang, “Threats to Federated Learning,” in Federated Learning: Privacy and Incentive, Q. Yang, L. Fan, and H. Yu, Eds. Cham: Springer International Publishing, 2020, pp. 3–16. doi: 10.1007/978-3-030-63076-8_1.\n[8]L. Lyu, X. Xu, Q. Wang, and H. Yu, “Collaborative fairness in federated learning,” in Federated Learning, Springer, 2020, pp. 189–204.\n\n[16]提出了一种经典先进的抗FR攻击方案RFFL。\n[16]X. Xu and L. Lyu, “A reputation mechanism is all you need: Collaborative fairness and adversarial robustness in federated learning,” 2021.\n\n作者自己被IEEE ISCC 2022接收的论文，在这篇文章中作者提出了一种更强的FR攻击–SFR攻击，它也是本方案的防御对象。\n\n贡献评估的总结文献[9]，总结了四种评估方法，作者一番对比之后选取了其中的个人表现评估法。\n[9]H. Wang et al., “Attack of the tails: Yes, you really can backdoor federated learning,” Adv. Neural Inf. Process. Syst., vol. 33, pp. 16070–16084, 2020.\n\n研究梯度泄露攻击的文章 [14] [20]，作者从中借鉴了本地高斯差分隐私来抵御梯度泄露攻击。\n[14]L. Zhu, Z. Liu, and S. Han, “Deep Leakage from Gradients,” in Advances in Neural Information Processing Systems, 2019, vol. 32. Accessed: Apr. 06, 2022. [Online]. Available: https://proceedings.neurips.cc/paper/2019/hash/60a6c4002cc7b29142def8871531281a-Abstract.html\n[20]J. Sun, A. Li, B. Wang, H. Yang, H. Li, and Y. Chen, “Soteria: Provable Defense Against Privacy Leakage in Federated Learning From Representation Perspective,” 2021, pp. 9311–9319. Accessed: Apr. 07, 2022. [Online].Available: https://openaccess.thecvf.com/content/CVPR2021/html/Sun_Soteria_Provable_Defense_Against_Privacy_Leakage_in_Federated_Learning_From_CVPR_2021_paper.html\n\n\n10.这篇论文的核心参考文献是？这些参考文献都起到了什么作用呢？\n文献[9]：PASS的贡献评估模块是从该文献总结的方法中选取和加工的，采用个人表现法评估。\n文献[14] [20]：PASS的隐私保护策略是从这两个文献当中借鉴的, 利用高斯LDP抵抗梯度泄露攻击。\n\n11.这项工作，可以拆分为哪些子工作，哪些步骤？每个步骤，或者每个子工作使用了哪些工具或者方法去完成的呢？画一个包含步骤和工具的类似流程图的东西PASS的架构图如下：\n\n\nPASS的算法步骤图如下：\n\n\n","dateCreated":"2022-08-04T23:15:51+08:00","dateModified":"2023-04-01T13:16:43+08:00","datePublished":"2022-08-04T23:15:51+08:00","description":"FL系统脆弱，无法抵御Free-Rider (FR) attack（搭便车攻击），这会导致隐私泄露，并降低FL系统性能，这篇论文通过隐私保护策略和贡献评估方案实现了抗Free Rider的安全公平联邦学习方案。","headline":"论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案","image":["https://s2.loli.net/2022/07/29/o41fnvJwktigTQh.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://drokish.com/2022/08/04/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/"},"publisher":{"@type":"Organization","name":"Drokish","sameAs":["http://wpa.qq.com/msgrd?v=3&uin=2385498525&site=qq&menu=yes","mailto:gx.zhu@foxmail.com","https://github.com/Liar-Mask","#about","/atom.xml"],"image":"author4-2.jpg","logo":{"@type":"ImageObject","url":"author4-2.jpg"}},"url":"https://drokish.com/2022/08/04/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/","keywords":"AI安全, 联邦学习, Free Riders","thumbnailUrl":"https://s2.loli.net/2022/07/29/o41fnvJwktigTQh.png"}</script>
     <meta name="description" content="FL系统脆弱，无法抵御Free-Rider (FR) attack（搭便车攻击），这会导致隐私泄露，并降低FL系统性能，这篇论文通过隐私保护策略和贡献评估方案实现了抗Free Rider的安全公平联邦学习方案。">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案">
-<meta property="og:url" content="https://drokish.com/2022/03/25/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/index.html">
+<meta property="og:url" content="https://drokish.com/2022/08/04/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/index.html">
 <meta property="og:site_name" content="Drokish&#39;s Blog">
 <meta property="og:description" content="FL系统脆弱，无法抵御Free-Rider (FR) attack（搭便车攻击），这会导致隐私泄露，并降低FL系统性能，这篇论文通过隐私保护策略和贡献评估方案实现了抗Free Rider的安全公平联邦学习方案。">
 <meta property="og:locale" content="zh_CN">
@@ -41,8 +41,8 @@
 <meta property="og:image" content="https://s2.loli.net/2022/07/29/o41fnvJwktigTQh.png">
 <meta property="og:image" content="https://s2.loli.net/2022/07/29/Ro1NDZE5FhbndkO.png">
 <meta property="og:image" content="https://s2.loli.net/2022/07/29/dgZDjSV4TLBoIEz.png">
-<meta property="article:published_time" content="2022-03-25T15:15:51.000Z">
-<meta property="article:modified_time" content="2023-04-01T04:24:08.730Z">
+<meta property="article:published_time" content="2022-08-04T15:15:51.000Z">
+<meta property="article:modified_time" content="2023-04-01T05:16:43.063Z">
 <meta property="article:author" content="Drokish">
 <meta property="article:tag" content="AI安全">
 <meta property="article:tag" content="联邦学习">
@@ -455,9 +455,9 @@ mjx-container[display="true"] + br {
     
     
         <div class="post-meta">
-    <time datetime="2022-03-25T23:15:51+08:00">
+    <time datetime="2022-08-04T23:15:51+08:00">
 	
-		    3月 25, 2022
+		    8月 04, 2022
     	
     </time>
     
@@ -678,9 +678,9 @@ mjx-container[display="true"] + br {
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/03/26/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86%E7%BB%8F%E5%85%B8%E8%AE%BA%E6%96%87%E6%A6%82%E8%A7%88/"
-                    data-tooltip="安全推理系列部分经典论文概览"
-                    aria-label="上一篇: 安全推理系列部分经典论文概览"
+                    href="/2022/11/16/%E6%91%84%E5%BD%B1%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"
+                    data-tooltip="摄影学习笔记（一）"
+                    aria-label="上一篇: 摄影学习笔记（一）"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -689,11 +689,14 @@ mjx-container[display="true"] + br {
             </li>
             <li class="post-action">
                 
-                    <a
-                        class="post-action-btn btn btn--disabled"
-                        aria-hidden="true"
-                    >
-                        
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/03/28/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86%E4%B9%8BSphinx%E8%AE%BA%E6%96%87%E7%90%86%E8%A7%A3/"
+                    data-tooltip="安全推理之Sphinx论文理解"
+                    aria-label="下一篇: 安全推理之Sphinx论文理解"
+                >
+                    
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
                         <i class="fa fa-angle-right" aria-hidden="true"></i>
                     </a>
@@ -705,7 +708,7 @@ mjx-container[display="true"] + br {
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="이 포스트 공유하기"
+                aria-label="Share this post"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -716,7 +719,7 @@ mjx-container[display="true"] + br {
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="http://connect.qq.com/widget/shareqq/index.html?url=https://drokish.com/2022/03/25/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/&amp;title=论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案"
+                    target="new" href="http://connect.qq.com/widget/shareqq/index.html?url=https://drokish.com/2022/08/04/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/&amp;title=论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案"
                     title="分享到 QQ"
                     aria-label="分享到 QQ"
                 >
@@ -729,7 +732,7 @@ mjx-container[display="true"] + br {
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://drokish.com/2022/03/25/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/"
+                    target="new" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://drokish.com/2022/08/04/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/"
                     title="分享到 QQ空间"
                     aria-label="分享到 QQ空间"
                 >
@@ -743,7 +746,7 @@ mjx-container[display="true"] + br {
                     <a
                         class="post-action-btn btn btn--default"
                         href="#gitalk"
-                        aria-label="댓글을 남겨주세요"
+                        aria-label="Leave a comment"
                     >
                         <i class="fa fa-comment"></i>
                     </a>
@@ -752,7 +755,7 @@ mjx-container[display="true"] + br {
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>
@@ -814,9 +817,9 @@ mjx-container[display="true"] + br {
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/03/26/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86%E7%BB%8F%E5%85%B8%E8%AE%BA%E6%96%87%E6%A6%82%E8%A7%88/"
-                    data-tooltip="安全推理系列部分经典论文概览"
-                    aria-label="上一篇: 安全推理系列部分经典论文概览"
+                    href="/2022/11/16/%E6%91%84%E5%BD%B1%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"
+                    data-tooltip="摄影学习笔记（一）"
+                    aria-label="上一篇: 摄影学习笔记（一）"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -825,11 +828,14 @@ mjx-container[display="true"] + br {
             </li>
             <li class="post-action">
                 
-                    <a
-                        class="post-action-btn btn btn--disabled"
-                        aria-hidden="true"
-                    >
-                        
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2022/03/28/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86%E4%B9%8BSphinx%E8%AE%BA%E6%96%87%E7%90%86%E8%A7%A3/"
+                    data-tooltip="安全推理之Sphinx论文理解"
+                    aria-label="下一篇: 安全推理之Sphinx论文理解"
+                >
+                    
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
                         <i class="fa fa-angle-right" aria-hidden="true"></i>
                     </a>
@@ -841,7 +847,7 @@ mjx-container[display="true"] + br {
             <a
                 class="post-action-btn btn btn--default btn-open-shareoptions"
                 href="#btn-open-shareoptions"
-                aria-label="이 포스트 공유하기"
+                aria-label="Share this post"
             >
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
@@ -852,7 +858,7 @@ mjx-container[display="true"] + br {
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="http://connect.qq.com/widget/shareqq/index.html?url=https://drokish.com/2022/03/25/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/&amp;title=论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案"
+                    target="new" href="http://connect.qq.com/widget/shareqq/index.html?url=https://drokish.com/2022/08/04/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/&amp;title=论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案"
                     title="分享到 QQ"
                     aria-label="分享到 QQ"
                 >
@@ -865,7 +871,7 @@ mjx-container[display="true"] + br {
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://drokish.com/2022/03/25/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/"
+                    target="new" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://drokish.com/2022/08/04/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/"
                     title="分享到 QQ空间"
                     aria-label="分享到 QQ空间"
                 >
@@ -879,7 +885,7 @@ mjx-container[display="true"] + br {
                     <a
                         class="post-action-btn btn btn--default"
                         href="#gitalk"
-                        aria-label="댓글을 남겨주세요"
+                        aria-label="Leave a comment"
                     >
                         <i class="fa fa-comment"></i>
                     </a>
@@ -888,7 +894,7 @@ mjx-container[display="true"] + br {
         
         <li class="post-action">
             
-                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
             
                 <i class="fa fa-list" aria-hidden="true"></i>
             </a>
@@ -909,7 +915,7 @@ mjx-container[display="true"] + br {
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="http://connect.qq.com/widget/shareqq/index.html?url=https://drokish.com/2022/03/25/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/&amp;title=论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案"
+                        href="http://connect.qq.com/widget/shareqq/index.html?url=https://drokish.com/2022/08/04/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/&amp;title=论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案"
                         aria-label="分享到 QQ"
                     >
                         <i class="fab fa-qq" aria-hidden="true"></i><span>分享到 QQ</span>
@@ -922,7 +928,7 @@ mjx-container[display="true"] + br {
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://drokish.com/2022/03/25/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/"
+                        href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://drokish.com/2022/08/04/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/"
                         aria-label="分享到 QQ空间"
                     >
                         <i class="fa fa-star" aria-hidden="true"></i><span>分享到 QQ空间</span>
@@ -995,39 +1001,6 @@ mjx-container[display="true"] + br {
                 
                 <div class="media">
                     
-                    <div class="media-left">
-                        <a
-                            class="link-unstyled"
-                            href="https://drokish.com/2022/03/25/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/"
-                            aria-label=": 论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案"
-                        >
-                            <img class="media-image" src="https://s2.loli.net/2022/07/29/o41fnvJwktigTQh.png" width="90" height="90"/>
-                        </a>
-                    </div>
-                    
-                    <div class="media-body">
-                        <a
-                            class="link-unstyled"
-                            href="https://drokish.com/2022/03/25/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/"
-                            aria-label=": 论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案"
-                        >
-                            <h3 class="media-heading">论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案</h3>
-                        </a>
-                        <span class="media-meta">
-                            <span class="media-date text-small">
-                                
-                                    2022年3月25日
-                                
-                            </span>
-                        </span>
-                        <div class="media-content hide-xs font-merryweather"><p>FL系统脆弱，无法抵御Free-Rider (FR) attack（搭便车攻击），这会导致隐私泄露，并降低FL系统性能，这篇论文通过隐私保护策略和贡献评估方案实现了抗Free Rider的安全公平联邦学习方案。</p></div>
-                    </div>
-                    <div style="clear:both;"></div>
-                    <hr>
-                </div>
-                
-                <div class="media">
-                    
                     <div class="media-body">
                         <a
                             class="link-unstyled"
@@ -1079,6 +1052,39 @@ mjx-container[display="true"] + br {
                             </span>
                         </span>
                         <div class="media-content hide-xs font-merryweather"><p>针对云训练下隐私计算和隐私保护难以平衡的问题，作者设计了一个⾼效且具有隐私保护性的在线深度学习框架，将HD和DP结合，为训练和推理阶段引入了混合隐私保护协议，核心是⽤HE 加密所有偏置分量，并⽤DP扰乱线性分量。</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://drokish.com/2022/08/04/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/"
+                            aria-label=": 论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案"
+                        >
+                            <img class="media-image" src="https://s2.loli.net/2022/07/29/o41fnvJwktigTQh.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://drokish.com/2022/08/04/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/"
+                            aria-label=": 论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案"
+                        >
+                            <h3 class="media-heading">论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2022年8月4日
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><p>FL系统脆弱，无法抵御Free-Rider (FR) attack（搭便车攻击），这会导致隐私泄露，并降低FL系统性能，这篇论文通过隐私保护策略和贡献评估方案实现了抗Free Rider的安全公平联邦学习方案。</p></div>
                     </div>
                     <div style="clear:both;"></div>
                     <hr>
@@ -1185,7 +1191,7 @@ mjx-container[display="true"] + br {
               repo: 'GitmentStorage',
               owner: 'Liar-Mask',
               admin: ['Liar-Mask'],
-              id: '2022/03/25/论文笔记-PASS/',
+              id: '2022/08/04/论文笔记-PASS/',
               ...{"language":"zh-CN","perPage":10,"distractionFreeMode":false,"enableHotKey":true,"pagerDirection":"first"}
             }).render('gitalk')
           })()
