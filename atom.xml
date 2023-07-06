@@ -100,11 +100,11 @@
     <category term="前沿技术" scheme="https://drokish.com/categories/%E5%89%8D%E6%B2%BF%E6%8A%80%E6%9C%AF/"/>
     
     
-    <category term="AI安全" scheme="https://drokish.com/tags/AI%E5%AE%89%E5%85%A8/"/>
-    
     <category term="安全推理" scheme="https://drokish.com/tags/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86/"/>
     
     <category term="隐私计算" scheme="https://drokish.com/tags/%E9%9A%90%E7%A7%81%E8%AE%A1%E7%AE%97/"/>
+    
+    <category term="AI安全" scheme="https://drokish.com/tags/AI%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
@@ -127,9 +127,9 @@
     <category term="前沿技术" scheme="https://drokish.com/categories/%E5%89%8D%E6%B2%BF%E6%8A%80%E6%9C%AF/"/>
     
     
-    <category term="AI安全" scheme="https://drokish.com/tags/AI%E5%AE%89%E5%85%A8/"/>
-    
     <category term="安全推理" scheme="https://drokish.com/tags/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86/"/>
+    
+    <category term="AI安全" scheme="https://drokish.com/tags/AI%E5%AE%89%E5%85%A8/"/>
     
   </entry>
   
