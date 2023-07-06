@@ -8576,7 +8576,7 @@ blockquote {
 #main {
   display: block;
   min-height: 100%;
-  background: #e0f1fff0;
+  background: #e7f4fff0;
   transition: transform .25s ease-in-out;
   -webkit-transition: -webkit-transform .25s ease-in-out; }
   #main.hasCover.hasCoverCaption, #main.hasCover.hasCoverMetaOut {
