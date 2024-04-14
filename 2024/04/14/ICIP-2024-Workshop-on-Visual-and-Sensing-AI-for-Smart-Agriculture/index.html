@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Drokish&#39;s Blog">
-    <title>安全推理之Sphinx论文理解 - Drokish&#39;s Blog</title>
+    <title>ICIP 2024 Workshop on Visual and Sensing AI for Smart Agriculture - Drokish&#39;s Blog</title>
     <meta name="author" content="Drokish">
     
     
@@ -17,25 +17,18 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Drokish","sameAs":["http://wpa.qq.com/msgrd?v=3&uin=2385498525&site=qq&menu=yes","mailto:gx.zhu@foxmail.com","https://github.com/Liar-Mask","#about","/atom.xml"],"image":"author4-2.jpg"},"articleBody":"针对云训练下隐私计算和隐私保护难以平衡的问题，作者设计了一个⾼效且具有隐私保护性的在线深度学习框架，将HD和DP结合，为训练和推理阶段引入了混合隐私保护协议，核心是⽤HE 加密所有偏置分量，并⽤DP扰乱线性分量。\n\n\n论文：《Sphinx: Enabling Privacy-Preserving Online Learning over the Cloud》\n\n作者：Han Tian   Chaoliang Zeng   Zhenghang Ren    Di Chai    Junxue Zhang    Kai Chen   Qiang Yang \nHong Kong University of Science and Technology    Clustar\n\n主要从以下角度思考：\n1.作者为什么做这项工作？（做这项工作的背景和目的）\n   为了缓解深度学习计算开销，模型的训练和推理会被委托给云服务商，这也带来了隐私保护的问题。现有的隐私保护在线学习方案要么假设服务器有一个明文模型，聚焦于通过加密数据提供推理服务，要么聚焦于加密模型的训练过程，却会导致低效的推理，要么做出不切实际的假设，例如多个非共谋服务器或受信任的聚合器。    所以作者思考：能否设计一个⾼效且具有隐私保护性的在线深度学习框架，⽽⽆需额外的第三⽅要求？最后提出了Sphinx。\n2.针对这项工作，以往的研究者做过了哪些工作，有哪些缺陷？\n\n神经⽹络上的隐私保护：\n特点：\n\n专注于推理；\n\n模型要么是公共的，要么是服务提供商专有的，它以明⽂形式存储和评估，只涉及加密数据与明文参数的乘法。\n\n\n代表工作：\n\nGazelle 引⼊了一种混合安全推理算法，其中线性层使⽤打包加性同态加密 (PAHE) 进行评估，⾮线性层使⽤混淆电路进行评估\n\nDelphi 通过将重量级密码计算提前到预处理阶段（作者idea的来源之一）并开发基于神经架构搜索 (NAS) 的规划器来搜索满⾜⽬标精度的最有效近似模型，改善了推理延迟\n\n\n缺陷：⽆法转移到在线学习环境中，因为训练算法需要对模型参数和梯度进行加密，以保护训练数据免受云端攻击\n\n神经⽹络隐私保护训练 \n\n集中式：\n\nHE方案：对模型权重和⽤⼾数据进行同态加密，将训练外包给服务提供商\n缺点：大量密文与密文之间的运算，速度极慢；没有考虑推理，只评估了训练阶段\n\nDP方案：引入随机量。例如DPSGD(高斯噪声自加的随机梯度下降)、DP-FTRL(前者的树聚合改进)、其他一些将随机量加入目标函数、激活特征和标签的工作缺点：模型性能和隐私级别难以平衡，难以兼顾；不能实现MLaaS下针对服务商的数据保护；需要假设一个可信数据聚合者\n\n\n\n分布式：基于MPC算法，隐私数据计算分布在多个服务器上\n\n代表工作：SecureML、ABY3、ScureNN、FLASH\n缺点：都假设多方非共谋服务器或大多数诚实的环境，不切实际\n\n\n\n\n联邦学习：多个数据拥有者在不暴露隐私的情况下协作训练他们的本地模型\n\n代表工作：Shokri的selective SGD并对上传梯度DP；Sinem采用HE进行FL学习\n因为作者重点在MLaaS环境，所以不作讨论\n\n\n\n3.作者大概是怎么做这项工作的？（一两句话概括）\n\n将HD和DP结合，为训练和推理阶段引入了混合隐私保护协议，核心是⽤HE 加密所有偏置分量，并⽤DP扰乱线性分量。\n此外，通过同态乘法加速和客户端-服务器通信加速进行了系统优化。\n\n4.这项工作突出优势在哪里？\n  有如下突出点：\n\n很好地结合了DP和HE，实现了两者的互补互惠：\n\nDP提高运算效率：利用DP将参数保持为明文，将纯HE密文* 密文的复杂计算，转化为更简便的密文* 明文\n\nHE加密，不需可信聚合器：利用HE加密偏置，一边保护隐私，一边还可以进行有意义的运算，无需可信聚合器即可训练算法\n\n\n\n对训练和推理两阶段都有很好的隐私保护性\n\n训练阶段采用DPSGD的同态版提供隐私保护，可以在没有受信任的服务器的情况下实现集 中式训练\n推理阶段采⽤基于秘密共享的隐私推理技术，服务提供者⽆法推断出任何有⽤的信息。\n\n\n\n高效的系统优化\n\n快速同态乘法：巧妙设计了神经网络层中模型参数、输⼊特征和梯度之间的乘法。线性分量作为明⽂，可以消除训练过程中的大部分重新缩放和重新线性化操作，使其能够采⽤较小的加密参数和较浅的乘法深度，从⽽\n加速客⼾端-服务器通信：\n前向传播缓存：在前向传播中预先计算加密激活函数更有效，可以避免重复计算和通信。客⼾端将每个非线性层的梯度本地缓存为明⽂，稍后可以在反向传播阶段使⽤。\n零解密和零加密：在离线预处理阶段，客⼾端通过加密 0 准备零密⽂流，作为一次性密⽂密文⼯作。 客⼾端一旦需要对消息进行加密，就直接将明⽂加零密⽂加密后发送给服务器，从而缩短上线阶段的加密时间。\n\n\n\n\n\n5.这项工作缺陷在哪里？\n   在Sphinx推理阶段，采用秘密共享技术加速推理，但需要更新的模型参数重新运行预处理，导致计算资源浪费\n6.他们的这项工作做的好，为啥好呢？他们是用啥理论证明的呢？（可能涉及方法正确性、性能、安全性）\n\n结合了DP和HE，设计了⾼效且兼容的训练和推理协议以满⾜其特定要求\n对训练和推理两阶段都有很好的隐私保护性\n为了加速 HE 方案下的训练过程， 进行了多项系统优化\n即使与 DP 解决⽅案相比，隐私成本相似，Sphinx 在实际场景中也可以实现明显更强的攻击防御\n\n7.作者如何设计实验的？\n 在两台相同的物理机上，使用MNIST、CIFAR数据集，从四个方面的对比实验来证明Sphinx的优势：\n\n训练上：展示了Sphinx 在训练时间和通信成本⽅⾯相对于纯 HE ⽅法的提升。Sphinx 在 MNIST 和 CIFAR-10 数据集上的神经⽹络的训练时间减少了 35 倍，通信成本降低了 5 倍。\n推理上：Sphinx 实现了实时推理（MNIST 为 0.05 秒，CIFAR-10 为 0.08秒），与纯 HE ⽅法相⽐，分别快5.8* 104 倍和 4.2* 105 倍。此外，对于这两个任务，Sphinx 的通信成本分别低 1.9 * 105×和 3.6 * 104× \n隐私成本上：给定相同的隐私预算，Sphinx 与纯 DP 训练算法 DPSGD 相⽐，在没有可信服务器的情况下实现了相当的模型精度。\n抵抗攻击上：与纯DP 算法相比，通过屏蔽偏差分量，Sphinx 有效地保护了重构攻击，免受暴露梯度的影响。\n\n8.   针对这项工作，作者未来还打算怎么做呢？有一些“展望”吗？\n\n作者将在未来探索和评估不同 DP 机制和 HE ⽅案之间的组合。例如，Kairouz 等⼈提出了一种在线学习 DP 机制，该机制允许更灵活的数据访问模式 ，当训练数据为⾮ IID 时，可以在 Sphinx 中采用这种机制。\n对于推理阶段的预处理造成计算资源浪费的问题，作者设想了一种保护隐私的在线学习⽅法，一旦模型更新，其先前的预处理结果可以与新的模型参数保持一致，⽽⽆需额外计算。\n\n9.这项工作的idea与哪些论文有一脉相承的关系呢？或者说，你感觉这篇论文的作者是看了哪些论文，才想到这项工作的idea呢？\n\nP. Mishra, R. Lehmkuhl, A. Srinivasan, W. Zheng, and R. A. Popa, “Delphi: A cryptographic inference service for neural networks,” in 29th {USENIX} Security Symposium ({USENIX} Security 20), 2020,pp. 2505–2522.\nDelphi 通过将重量级密码计算提前到预处理阶段的论文，我感觉作者或许由此想到了前向传播缓存、离线预处理等idea\n\nC. Juvekar, V. Vaikuntanathan, and A. Chandrakasan, “{GAZELLE}: A low latency framework for secure neural network inference,” in 27th {USENIX} Security Symposium ({USENIX} Security 18), 2018, pp.1651–1669.\nGazelle 引⼊混合安全推理算法的论文，作者或许受它启发为训练和推理阶段引入了混合隐私保护协议\n\n\n10.这篇论文的核心参考文献是？这些参考文献都起到了什么作用呢？\n\n[55] J. H. Cheon, A. Kim, M. Kim, and Y. Song, “Homomorphic encryption for arithmetic of approximate numbers,” in International Conference on the Theory and Application of Cryptology and Information Security.Springer, 2017, pp. 409–437.\n\n  提出了CKKS 这种可行的同态加密算法，⽀持有限数量的密⽂加法和乘法，是本文同态加密的基础\n\n[56] H. Chen, W. Dai, M. Kim, and Y. Song, “Efficient multi-key homomorphic encryption with packed ciphertexts with application to oblivious neural network inference,” in Proceedings of the 2019 ACM SIGSAC Conference on Computer and Communications Security, 2019, pp. 395–412. \n提供了重缩放、重线性化等同态加密运算优化操作\n\n[57] S. Goryczka, L. Xiong, and V. Sunderam, “Secure multiparty aggregation with differential privacy: A comparative study,” in Proceedings of the Joint EDBT/ICDT 2013 Workshops, 2013, pp. 155–163.\n证明了通过 HE，用户可以在将数据发送到聚合器之前对其进行加密 。 HE 允许聚合器执行安全聚合以获得有意义的统计结果。\n\n[5]P. Mishra, R. Lehmkuhl, A. Srinivasan, W. Zheng, and R. A. Popa, “Delphi: A cryptographic inference service for neural networks,” in 29th {USENIX} Security Symposium ({USENIX} Security 20), 2020,pp. 2505–2522.\n提供了基于线性操作的私有推理协议，为推理阶段的协议奠定了基础\n\n[15]M. Abadi, A. Chu, I. Goodfellow, H. B. McMahan, I. Mironov, K. Talwar, and L. Zhang, “Deep learning with differential privacy,” in Proceedings of the 2016 ACM SIGSAC conference on computer and communications security, 2016, pp. 308–318\n作者的训练协议可以看作是[15] 提出的DPSGD 的同态版本，没有受信任的服务器。它采⽤采样⾼斯机制（SGM）从数据集中采样小批量，并在线性分量的聚合梯度上添加⾼斯噪声。\n\n\n11.这项工作，可以拆分为哪些子工作，就是哪些步骤。每个步骤，或者每个子工作使用了哪些工具或者方法去完成的呢？\n\nSphinx架构图：\n \n对于 DNN 模型，线性分量 W 受到 DP 的扰动，偏置分量Bias⽤ HE 加密。 F 表示非线性层。\n\nSphinx训练算法步骤图：\n\n\n","dateCreated":"2022-03-28T21:22:51+08:00","dateModified":"2023-04-01T12:23:42+08:00","datePublished":"2022-03-28T21:22:51+08:00","description":"针对云训练下隐私计算和隐私保护难以平衡的问题，作者设计了一个⾼效且具有隐私保护性的在线深度学习框架，将HD和DP结合，为训练和推理阶段引入了混合隐私保护协议，核心是⽤HE 加密所有偏置分量，并⽤DP扰乱线性分量。","headline":"安全推理之Sphinx论文理解","image":["https://s2.loli.net/2022/02/26/NCr4gfncFjeY6td.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://drokish.com/2022/03/28/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86%E4%B9%8BSphinx%E8%AE%BA%E6%96%87%E7%90%86%E8%A7%A3/"},"publisher":{"@type":"Organization","name":"Drokish","sameAs":["http://wpa.qq.com/msgrd?v=3&uin=2385498525&site=qq&menu=yes","mailto:gx.zhu@foxmail.com","https://github.com/Liar-Mask","#about","/atom.xml"],"image":"author4-2.jpg","logo":{"@type":"ImageObject","url":"author4-2.jpg"}},"url":"https://drokish.com/2022/03/28/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86%E4%B9%8BSphinx%E8%AE%BA%E6%96%87%E7%90%86%E8%A7%A3/","keywords":"AI安全, 安全推理, 隐私计算","thumbnailUrl":"https://s2.loli.net/2022/02/26/NCr4gfncFjeY6td.png"}</script>
-    <meta name="description" content="针对云训练下隐私计算和隐私保护难以平衡的问题，作者设计了一个⾼效且具有隐私保护性的在线深度学习框架，将HD和DP结合，为训练和推理阶段引入了混合隐私保护协议，核心是⽤HE 加密所有偏置分量，并⽤DP扰乱线性分量。">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Drokish","sameAs":["http://wpa.qq.com/msgrd?v=3&uin=2385498525&site=qq&menu=yes","mailto:gx.zhu@foxmail.com","https://github.com/Liar-Mask","#about","/atom.xml"],"image":"author4-2.jpg"},"articleBody":"DescriptionIn recent years, sensor networks, drones, IoT technologies have been introduced to improve many aspects of agricultural practices, including but are not limited to energy efficiency, environmental friendliness, and food healthiness, necessitating advanced signal processing techniques and systems that meet the many challenges in agricultural applications under strict cost, power consumption, weather-proof, and other constraints. Furthermore, with revolutionary advancements in deep learning and AI, smart agriculture is at the eve of explosive growth with its impact felt on a global scale. \nAt this time juncture, we propose to ICIP 2024, a dedicated workshop bringing together leading experts in smart agriculture and signal processing for smart agriculture, as well as broad audience from the signal processing community in general, for an in-depth face to face presentation and discussion of the signal processing challenges in smart agriculture applications, as well as the state-of-the-art, thereby improving the awareness by the image processing and signal processing  community to critical and promising research areas and challenges pertaining to one of the most fundamental and ancient practices of human society. The workshop will include presentations by experts from the drone, smart agriculture and signal processing societies, presentations of papers, and an panel for curated open discussions.\nResearch TopicsMain topics covered include but are not limited to \n\nImage and processing for sensor networks in smart agriculture\n\nImage and signal processing for drones\n\nRobust and energy efficient signal and image processing systems for smart agriculture\n\nDrones for smart agriculture \n\nLarge models for smart agriculture \n\nImage and signal processing for food processing \n\nMulti-modal information fusion for smart agriculture\n\nBlockchain for smart agriculture\n\n\nInformationExtended AbstractProviding sufficient and healthy food to world population in a sustainable manner is one of the greatest challenges faced by human society today. According to Cares.org, the “global food system is responsible for approximately one-third of all global greenhouse emissions” [1], while one in ten people around the world go to bed hungry each night, 45% of child death can be attributed to hunger and related causes [2], even though there is enough food produced to feed everyone on earth.\nOn the other hand, in developed countries such as the US, unhealthy eating and inactivity is the leading cause of death [3], while a 2013 article found that food recalls can cause $77 billion in economic damages in the US [4].\nIn populous developing countries such as China and India, pesticides and fertilizers are widely abused that poses health threads to a large percentage of the world youth population.\nThese are only a few examples of the challenges facing the world agriculture and food industry. In recent years, technologies such as IoT, sensor networks, big data have been introduced to improve the food production and distribution ecosystem, while reducing carbon footprint. With the rapid development of deep learning and AI, especially large models, smart agriculture are at the eve of revolutionary growth.\nCentral to this forth-coming revolution is signal and especially image processing algorithms suitable for applications to smart agriculture, where cost and energy consumption are severely constrained, and where signal strength and quality are often low, and where signals are often impaired by weather, landscape, vegetation, etc.\nAs a first example, autonomous UAV (drone) must deal with highly complicated landscapes and farmland shapes in developing countries such as China, necessitating low latency, low power image processing and computer vision algorithms, preferably implemented using Domain Specific Architecture.\nEfficient pest control must be able to utilize both marco information such as weather and historic pest and climate information, as well as micro information collected by low cost and energy efficient smart sensors, that can be of low precision and are non-uniformly collected both spatially and temporally. It can potentially benefit from large models providing information such as fertilizing and pest-killing efficiency, as well as environmental and food healthiness impact. \nFor applications in the food processing and health monitoring areas, image based analysis of calorie in-take tracking can be integrated with information collected from smart wearable devices and etc., with user privacy protected using technologies such as blockchain.\nIn this workshop, we aim to bring stake-holders and researchers in smart agriculture related areas together, and through keynote presentations, research paper presentations and monitored and curated open discussions, raised awareness of the general image and signal processing community to many challenges and research opportunities in smart agriculture related applications.\nIt will also serve as an out-reach opportunity by the IEEE Signal Processing Society to the agriculture and food production industries, which could benefit tremendously from participation in IEEE Conferences and IEEE coordinated standards and professional training events.\nPlanned compositionWe propose to include key note presentations, and  monitored and curated open discussions. \nOrganizers\nYuxing Han, Tsinghua-Berkeley Shenzhen Institute, China, &#x79;&#x75;&#x78;&#105;&#x6e;&#x67;&#104;&#x61;&#110;&#64;&#115;&#x7a;&#x2e;&#x74;&#115;&#x69;&#110;&#x67;&#x68;&#x75;&#97;&#x2e;&#101;&#100;&#117;&#46;&#x63;&#x6e;\n\nFengqing Maggie Zhu, School of Electrical and Computer Engineering, Purdue University, USA, &#x7a;&#104;&#x75;&#x30;&#x40;&#112;&#x75;&#x72;&#100;&#x75;&#x65;&#x2e;&#x65;&#x64;&#x75;\n\nYubin Lan, South China Agricultural University, China, &#x79;&#x6c;&#97;&#110;&#x40;&#x73;&#99;&#x61;&#117;&#46;&#x65;&#x64;&#x75;&#46;&#99;&#x6e;\n\n\nMeasure to ensure diversityWe measure diversity in three important aspects:\nThe first is in the composition of organizers and participants. Nearly half of the organizers are female, with a diversity in seniority in terms of career development. The organizers come from Asia, Europe, and North America. We will also proactively promote the workshop through regular IEEE channels, as well as channels dedicated to female professionals.\nThe second aspect of diversity is participates from academia and industry. We plan to invite key note speakers from leading companies such as Walmart and DJI, as well as from universities and research institutes.\nThe third aspect is diversity in seniority of the participates. But including high level key note presentations as well as cutting edge research papers, we strive to make the workshop informative and engaging to students as well as seasoned researchers and engineers. \nReferences\nhttps://www.ceres.org/climate/ambition2030/food-emissions-50?gad_source=1&amp;gclid=Cj0KCQiAoeGuBhCBARIsAGfKY7z1bFEKXiKqMZdEDu8Ba-yKzbuxzkvxUScSGA_XxM6YkBgUdWkU024aAixyEALw_wcB#about-the-initiative?utm_source=google-ad-grant&amp;utm_medium=paid&amp;utm_campaign=food-forests_food-emissions-50_keywords&amp;utm_source_platform=googleadgrant\n\nhttps://www.actionagainsthunger.org/the-hunger-crisis/world-hunger-facts/\n\nhttps://www.cspinet.org/eating-healthy/why-good-nutrition-important\n\nhttps://www.ncbi.nlm.nih.gov/pmc/articles/PMC5302274/#:~:text=The%20estimated%20cost%20of%20food,countries%20similarly%20have%20economic%20losses\n\n\n","dateCreated":"2024-04-14T22:46:06+08:00","dateModified":"2024-04-14T22:50:30+08:00","datePublished":"2024-04-14T22:46:06+08:00","description":"","headline":"ICIP 2024 Workshop on Visual and Sensing AI for Smart Agriculture","image":["https://raw.githubusercontent.com/Liar-Mask/Photos/main/img/Workshop_Cover.jpg","https://raw.githubusercontent.com/Liar-Mask/Photos/main/img/Workshop_Cover.jpg"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://drokish.com/2024/04/14/ICIP-2024-Workshop-on-Visual-and-Sensing-AI-for-Smart-Agriculture/"},"publisher":{"@type":"Organization","name":"Drokish","sameAs":["http://wpa.qq.com/msgrd?v=3&uin=2385498525&site=qq&menu=yes","mailto:gx.zhu@foxmail.com","https://github.com/Liar-Mask","#about","/atom.xml"],"image":"author4-2.jpg","logo":{"@type":"ImageObject","url":"author4-2.jpg"}},"url":"https://drokish.com/2024/04/14/ICIP-2024-Workshop-on-Visual-and-Sensing-AI-for-Smart-Agriculture/","thumbnailUrl":"https://raw.githubusercontent.com/Liar-Mask/Photos/main/img/Workshop_Cover.jpg"}</script>
+    <meta name="description" content="DescriptionIn recent years, sensor networks, drones, IoT technologies have been introduced to improve many aspects of agricultural practices, including but are not limited to energy efficiency, enviro">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="安全推理之Sphinx论文理解">
-<meta property="og:url" content="https://drokish.com/2022/03/28/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86%E4%B9%8BSphinx%E8%AE%BA%E6%96%87%E7%90%86%E8%A7%A3/index.html">
+<meta property="og:title" content="ICIP 2024 Workshop on Visual and Sensing AI for Smart Agriculture">
+<meta property="og:url" content="https://drokish.com/2024/04/14/ICIP-2024-Workshop-on-Visual-and-Sensing-AI-for-Smart-Agriculture/index.html">
 <meta property="og:site_name" content="Drokish&#39;s Blog">
-<meta property="og:description" content="针对云训练下隐私计算和隐私保护难以平衡的问题，作者设计了一个⾼效且具有隐私保护性的在线深度学习框架，将HD和DP结合，为训练和推理阶段引入了混合隐私保护协议，核心是⽤HE 加密所有偏置分量，并⽤DP扰乱线性分量。">
+<meta property="og:description" content="DescriptionIn recent years, sensor networks, drones, IoT technologies have been introduced to improve many aspects of agricultural practices, including but are not limited to energy efficiency, enviro">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s2.loli.net/2022/02/27/w7zj26uJrPmKGfX.png">
-<meta property="og:image" content="https://s2.loli.net/2022/02/26/NCr4gfncFjeY6td.png">
-<meta property="og:image" content="https://s2.loli.net/2022/02/26/NyeG6sZ3FAhlSVj.png">
-<meta property="article:published_time" content="2022-03-28T13:22:51.000Z">
-<meta property="article:modified_time" content="2023-04-01T04:23:42.035Z">
+<meta property="article:published_time" content="2024-04-14T14:46:06.526Z">
+<meta property="article:modified_time" content="2024-04-14T14:50:30.870Z">
 <meta property="article:author" content="Drokish">
-<meta property="article:tag" content="AI安全">
-<meta property="article:tag" content="安全推理">
-<meta property="article:tag" content="隐私计算">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://s2.loli.net/2022/02/27/w7zj26uJrPmKGfX.png">
     
     
         
@@ -44,9 +37,12 @@
         <meta property="og:image" content="https://drokish.com/assets/images/author4-2.jpg"/>
     
     
-        <meta property="og:image" content="https://s2.loli.net/2022/02/26/NCr4gfncFjeY6td.png"/>
-        <meta class="swiftype" name="image" data-type="enum" content="https://s2.loli.net/2022/02/26/NCr4gfncFjeY6td.png"/>
+        <meta property="og:image" content="https://raw.githubusercontent.com/Liar-Mask/Photos/main/img/Workshop_Cover.jpg"/>
+        <meta class="swiftype" name="image" data-type="enum" content="https://raw.githubusercontent.com/Liar-Mask/Photos/main/img/Workshop_Cover.jpg"/>
     
+    
+        <meta property="og:image" content="https://raw.githubusercontent.com/Liar-Mask/Photos/main/img/Workshop_Cover.jpg"/>
+        <meta class="swiftype" name="image" data-type="enum" content="https://raw.githubusercontent.com/Liar-Mask/Photos/main/img/Workshop_Cover.jpg"/>
     
     
     <!--STYLES-->
@@ -84,119 +80,7 @@
 
         
     
-<style>mjx-container[jax="SVG"] {
-  direction: ltr;
-}
-
-mjx-container[jax="SVG"] > svg {
-  overflow: visible;
-}
-
-mjx-container[jax="SVG"][display="true"] {
-  display: block;
-  text-align: center;
-  margin: 1em 0;
-}
-
-mjx-container[jax="SVG"][justify="left"] {
-  text-align: left;
-}
-
-mjx-container[jax="SVG"][justify="right"] {
-  text-align: right;
-}
-
-g[data-mml-node="merror"] > g {
-  fill: red;
-  stroke: red;
-}
-
-g[data-mml-node="merror"] > rect[data-background] {
-  fill: yellow;
-  stroke: none;
-}
-
-g[data-mml-node="mtable"] > line[data-line] {
-  stroke-width: 70px;
-  fill: none;
-}
-
-g[data-mml-node="mtable"] > rect[data-frame] {
-  stroke-width: 70px;
-  fill: none;
-}
-
-g[data-mml-node="mtable"] > .mjx-dashed {
-  stroke-dasharray: 140;
-}
-
-g[data-mml-node="mtable"] > .mjx-dotted {
-  stroke-linecap: round;
-  stroke-dasharray: 0,140;
-}
-
-g[data-mml-node="mtable"] > svg {
-  overflow: visible;
-}
-
-[jax="SVG"] mjx-tool {
-  display: inline-block;
-  position: relative;
-  width: 0;
-  height: 0;
-}
-
-[jax="SVG"] mjx-tool > mjx-tip {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-mjx-tool > mjx-tip {
-  display: inline-block;
-  padding: .2em;
-  border: 1px solid #888;
-  font-size: 70%;
-  background-color: #F8F8F8;
-  color: black;
-  box-shadow: 2px 2px 5px #AAAAAA;
-}
-
-g[data-mml-node="maction"][data-toggle] {
-  cursor: pointer;
-}
-
-mjx-status {
-  display: block;
-  position: fixed;
-  left: 1em;
-  bottom: 1em;
-  min-width: 25%;
-  padding: .2em .4em;
-  border: 1px solid #888;
-  font-size: 90%;
-  background-color: #F8F8F8;
-  color: black;
-}
-
-foreignObject[data-mjx-xml] {
-  font-family: initial;
-  line-height: normal;
-  overflow: visible;
-}
-
-.MathJax path {
-  stroke-width: 3;
-}
-
-mjx-container[display="true"] {
-  overflow: auto hidden;
-}
-
-mjx-container[display="true"] + br {
-  display: none;
-}
-</style></head>
+</head>
 
     <body>
         <div id="blog">
@@ -426,191 +310,98 @@ mjx-container[display="true"] + br {
 </nav>
 
             
+        <div class="post-header-cover
+                    text-left
+                    "
+             style="background-image:url('https://raw.githubusercontent.com/Liar-Mask/Photos/main/img/Workshop_Cover.jpg');"
+             data-behavior="4">
+            
+                <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            ICIP 2024 Workshop on Visual and Sensing AI for Smart Agriculture
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2024-04-14T22:46:06+08:00">
+	
+		    4月 14, 2024
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+            
+        </div>
+
             <div id="main" data-behavior="4"
-                 class="
+                 class="hasCover
                         hasCoverMetaIn
                         ">
                 
 <article class="post">
     
     
-        <div class="post-header main-content-wrap text-left">
-    
-        <h1 class="post-title">
-            安全推理之Sphinx论文理解
-        </h1>
-    
-    
-        <div class="post-meta">
-    <time datetime="2022-03-28T21:22:51+08:00">
-	
-		    3月 28, 2022
-    	
-    </time>
-    
-        <span>发布在 </span>
-        
-    <a class="category-link" href="/categories/%E5%89%8D%E6%B2%BF%E6%8A%80%E6%9C%AF/">前沿技术</a>
-
-
-    
-</div>
-
-    
-</div>
-
-    
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <p>针对云训练下隐私计算和隐私保护难以平衡的问题，作者设计了一个⾼效且具有隐私保护性的在线深度学习框架，将HD和DP结合，为训练和推理阶段引入了混合隐私保护协议，核心是⽤HE 加密所有偏置分量，并⽤DP扰乱线性分量。</p>
-<span id="more"></span>
-
-<p>论文：《Sphinx: Enabling Privacy-Preserving Online Learning over the Cloud》</p>
-<blockquote>
-<p>作者：Han Tian   Chaoliang Zeng   Zhenghang Ren    Di Chai    Junxue Zhang    Kai Chen   Qiang Yang </p>
-<p>Hong Kong University of Science and Technology    Clustar</p>
-</blockquote>
-<p>主要从以下角度思考：</p>
-<p><strong>1.作者为什么做这项工作？（做这项工作的背景和目的）</strong></p>
-<p>   为了缓解深度学习计算开销，模型的训练和推理会被委托给云服务商，这也带来了隐私保护的问题。现有的隐私保护在线学习方案要么假设服务器有一个明文模型，聚焦于通过加密数据提供推理服务，要么聚焦于加密模型的训练过程，却会导致低效的推理，要么做出不切实际的假设，例如多个非共谋服务器或受信任的聚合器。<br>    所以作者思考：能否设计一个⾼效且具有隐私保护性的在线深度学习框架，⽽⽆需额外的第三⽅要求？最后提出了Sphinx。</p>
-<p><strong>2.针对这项工作，以往的研究者做过了哪些工作，有哪些缺陷？</strong></p>
+            <h2 id="Description"><a href="#Description" class="headerlink" title="Description"></a>Description</h2><p>In recent years, sensor networks, drones, IoT technologies have been introduced to improve many aspects of agricultural practices, including but are not limited to energy efficiency, environmental friendliness, and food healthiness, necessitating advanced signal processing techniques and systems that meet the many challenges in agricultural applications under strict cost, power consumption, weather-proof, and other constraints. Furthermore, with revolutionary advancements in deep learning and AI, smart agriculture is at the eve of explosive growth with its impact felt on a global scale. </p>
+<p>At this time juncture, we propose to ICIP 2024, a dedicated workshop bringing together leading experts in smart agriculture and signal processing for smart agriculture, as well as broad audience from the signal processing community in general, for an in-depth face to face presentation and discussion of the signal processing challenges in smart agriculture applications, as well as the state-of-the-art, thereby improving the awareness by the image processing and signal processing  community to critical and promising research areas and challenges pertaining to one of the most fundamental and ancient practices of human society. The workshop will include presentations by experts from the drone, smart agriculture and signal processing societies, presentations of papers, and an panel for curated open discussions.</p>
+<h2 id="Research-Topics"><a href="#Research-Topics" class="headerlink" title="Research Topics"></a>Research Topics</h2><p>Main topics covered include but are not limited to </p>
 <ul>
-<li><p>神经⽹络上的隐私保护：</p>
-<p>特点：</p>
-<ul>
-<li><p>专注于推理；</p>
+<li><p>Image and processing for sensor networks in smart agriculture</p>
 </li>
-<li><p>模型要么是公共的，要么是服务提供商专有的，它以明⽂形式存储和评估，只涉及加密数据与明文参数的乘法。</p>
+<li><p>Image and signal processing for drones</p>
 </li>
-</ul>
-<p>代表工作：</p>
-<ul>
-<li><p>Gazelle 引⼊了一种混合安全推理算法，其中线性层使⽤打包加性同态加密 (PAHE) 进行评估，⾮线性层使⽤混淆电路进行评估</p>
+<li><p>Robust and energy efficient signal and image processing systems for smart agriculture</p>
 </li>
-<li><p>Delphi 通过将重量级密码计算提前到预处理阶段（作者idea的来源之一）并开发基于神经架构搜索 (NAS) 的规划器来搜索满⾜⽬标精度的最有效近似模型，改善了推理延迟</p>
+<li><p>Drones for smart agriculture </p>
 </li>
-</ul>
-<p>缺陷：⽆法转移到在线学习环境中，因为训练算法需要对模型参数和梯度进行加密，以保护训练数据免受云端攻击</p>
+<li><p>Large models for smart agriculture </p>
 </li>
-<li><p>神经⽹络隐私保护训练 </p>
-<ul>
-<li><p>集中式：</p>
-<ul>
-<li><p>HE方案：对模型权重和⽤⼾数据进行同态加密，将训练外包给服务提供商</p>
-<p>缺点：大量密文与密文之间的运算，速度极慢；没有考虑推理，只评估了训练阶段</p>
+<li><p>Image and signal processing for food processing </p>
 </li>
-<li><p>DP方案：引入随机量。例如DPSGD(高斯噪声自加的随机梯度下降)、DP-FTRL(前者的树聚合改进)、其他一些将随机量加入目标函数、激活特征和标签的工作<br>缺点：模型性能和隐私级别难以平衡，难以兼顾；不能实现MLaaS下针对服务商的数据保护；需要假设一个可信数据聚合者</p>
+<li><p>Multi-modal information fusion for smart agriculture</p>
+</li>
+<li><p>Blockchain for smart agriculture</p>
 </li>
 </ul>
+<h2 id="Information"><a href="#Information" class="headerlink" title="Information"></a>Information</h2><h4 id="Extended-Abstract"><a href="#Extended-Abstract" class="headerlink" title="Extended Abstract"></a>Extended Abstract</h4><p>Providing sufficient and healthy food to world population in a sustainable manner is one of the greatest challenges faced by human society today. According to Cares.org, the “global food system is responsible for approximately one-third of all global greenhouse emissions” [1], while one in ten people around the world go to bed hungry each night, 45% of child death can be attributed to hunger and related causes [2], even though there is enough food produced to feed everyone on earth.</p>
+<p>On the other hand, in developed countries such as the US, unhealthy eating and inactivity is the leading cause of death [3], while a 2013 article found that food recalls can cause $77 billion in economic damages in the US [4].</p>
+<p>In populous developing countries such as China and India, pesticides and fertilizers are widely abused that poses health threads to a large percentage of the world youth population.</p>
+<p>These are only a few examples of the challenges facing the world agriculture and food industry. In recent years, technologies such as IoT, sensor networks, big data have been introduced to improve the food production and distribution ecosystem, while reducing carbon footprint. With the rapid development of deep learning and AI, especially large models, smart agriculture are at the eve of revolutionary growth.</p>
+<p>Central to this forth-coming revolution is signal and especially image processing algorithms suitable for applications to smart agriculture, where cost and energy consumption are severely constrained, and where signal strength and quality are often low, and where signals are often impaired by weather, landscape, vegetation, etc.</p>
+<p>As a first example, autonomous UAV (drone) must deal with highly complicated landscapes and farmland shapes in developing countries such as China, necessitating low latency, low power image processing and computer vision algorithms, preferably implemented using Domain Specific Architecture.</p>
+<p>Efficient pest control must be able to utilize both marco information such as weather and historic pest and climate information, as well as micro information collected by low cost and energy efficient smart sensors, that can be of low precision and are non-uniformly collected both spatially and temporally. It can potentially benefit from large models providing information such as fertilizing and pest-killing efficiency, as well as environmental and food healthiness impact. </p>
+<p>For applications in the food processing and health monitoring areas, image based analysis of calorie in-take tracking can be integrated with information collected from smart wearable devices and etc., with user privacy protected using technologies such as blockchain.</p>
+<p>In this workshop, we aim to bring stake-holders and researchers in smart agriculture related areas together, and through keynote presentations, research paper presentations and monitored and curated open discussions, raised awareness of the general image and signal processing community to many challenges and research opportunities in smart agriculture related applications.</p>
+<p>It will also serve as an out-reach opportunity by the IEEE Signal Processing Society to the agriculture and food production industries, which could benefit tremendously from participation in IEEE Conferences and IEEE coordinated standards and professional training events.</p>
+<h4 id="Planned-composition"><a href="#Planned-composition" class="headerlink" title="Planned composition"></a>Planned composition</h4><p>We propose to include key note presentations, and  monitored and curated open discussions. </p>
+<h4 id="Organizers"><a href="#Organizers" class="headerlink" title="Organizers"></a>Organizers</h4><ol>
+<li><p>Yuxing Han, Tsinghua-Berkeley Shenzhen Institute, China, <a href="mailto:&#x79;&#x75;&#x78;&#105;&#x6e;&#x67;&#104;&#x61;&#110;&#64;&#115;&#x7a;&#x2e;&#x74;&#115;&#x69;&#110;&#x67;&#x68;&#x75;&#97;&#x2e;&#101;&#100;&#117;&#46;&#x63;&#x6e;">&#x79;&#x75;&#x78;&#105;&#x6e;&#x67;&#104;&#x61;&#110;&#64;&#115;&#x7a;&#x2e;&#x74;&#115;&#x69;&#110;&#x67;&#x68;&#x75;&#97;&#x2e;&#101;&#100;&#117;&#46;&#x63;&#x6e;</a></p>
 </li>
-<li><p>分布式：基于MPC算法，隐私数据计算分布在多个服务器上</p>
-<ul>
-<li>代表工作：SecureML、ABY3、ScureNN、FLASH</li>
-<li>缺点：都假设多方非共谋服务器或大多数诚实的环境，不切实际</li>
-</ul>
+<li><p>Fengqing Maggie Zhu, School of Electrical and Computer Engineering, Purdue University, USA, <a href="mailto:&#x7a;&#104;&#x75;&#x30;&#x40;&#112;&#x75;&#x72;&#100;&#x75;&#x65;&#x2e;&#x65;&#x64;&#x75;">&#x7a;&#104;&#x75;&#x30;&#x40;&#112;&#x75;&#x72;&#100;&#x75;&#x65;&#x2e;&#x65;&#x64;&#x75;</a></p>
 </li>
-</ul>
+<li><p>Yubin Lan, South China Agricultural University, China, <a href="mailto:&#x79;&#x6c;&#97;&#110;&#x40;&#x73;&#99;&#x61;&#117;&#46;&#x65;&#x64;&#x75;&#46;&#99;&#x6e;">&#x79;&#x6c;&#97;&#110;&#x40;&#x73;&#99;&#x61;&#117;&#46;&#x65;&#x64;&#x75;&#46;&#99;&#x6e;</a></p>
 </li>
-<li><p>联邦学习：多个数据拥有者在不暴露隐私的情况下协作训练他们的本地模型</p>
-<ul>
-<li>代表工作：Shokri的selective SGD并对上传梯度DP；Sinem采用HE进行FL学习</li>
-<li>因为作者重点在MLaaS环境，所以不作讨论</li>
-</ul>
+</ol>
+<h4 id="Measure-to-ensure-diversity"><a href="#Measure-to-ensure-diversity" class="headerlink" title="Measure to ensure diversity"></a>Measure to ensure diversity</h4><p>We measure diversity in three important aspects:</p>
+<p>The first is in the composition of organizers and participants. Nearly half of the organizers are female, with a diversity in seniority in terms of career development. The organizers come from Asia, Europe, and North America. We will also proactively promote the workshop through regular IEEE channels, as well as channels dedicated to female professionals.</p>
+<p>The second aspect of diversity is participates from academia and industry. We plan to invite key note speakers from leading companies such as Walmart and DJI, as well as from universities and research institutes.</p>
+<p>The third aspect is diversity in seniority of the participates. But including high level key note presentations as well as cutting edge research papers, we strive to make the workshop informative and engaging to students as well as seasoned researchers and engineers. </p>
+<h4 id="References"><a href="#References" class="headerlink" title="References"></a>References</h4><ol>
+<li><p><a target="_blank" rel="noopener" href="https://www.ceres.org/climate/ambition2030/food-emissions-50?gad_source=1&gclid=Cj0KCQiAoeGuBhCBARIsAGfKY7z1bFEKXiKqMZdEDu8Ba-yKzbuxzkvxUScSGA_XxM6YkBgUdWkU024aAixyEALw_wcB#about-the-initiative?utm_source=google-ad-grant&utm_medium=paid&utm_campaign=food-forests_food-emissions-50_keywords&utm_source_platform=googleadgrant">https://www.ceres.org/climate/ambition2030/food-emissions-50?gad_source=1&amp;gclid=Cj0KCQiAoeGuBhCBARIsAGfKY7z1bFEKXiKqMZdEDu8Ba-yKzbuxzkvxUScSGA_XxM6YkBgUdWkU024aAixyEALw_wcB#about-the-initiative?utm_source=google-ad-grant&amp;utm_medium=paid&amp;utm_campaign=food-forests_food-emissions-50_keywords&amp;utm_source_platform=googleadgrant</a></p>
 </li>
-</ul>
-<p><strong>3.作者大概是怎么做这项工作的？（一两句话概括）</strong></p>
-<ul>
-<li>将HD和DP结合，为训练和推理阶段引入了混合隐私保护协议，核心是⽤HE 加密所有偏置分量，并⽤DP扰乱线性分量。</li>
-<li>此外，通过同态乘法加速和客户端-服务器通信加速进行了系统优化。</li>
-</ul>
-<p><strong>4.这项工作突出优势在哪里？</strong></p>
-<p>  有如下突出点：</p>
-<ul>
-<li><p>很好地结合了DP和HE，实现了两者的互补互惠：</p>
-<ul>
-<li><p>DP提高运算效率：利用DP将参数保持为明文，将纯HE密文* 密文的复杂计算，转化为更简便的密文* 明文</p>
+<li><p><a target="_blank" rel="noopener" href="https://www.actionagainsthunger.org/the-hunger-crisis/world-hunger-facts/">https://www.actionagainsthunger.org/the-hunger-crisis/world-hunger-facts/</a></p>
 </li>
-<li><p>HE加密，不需可信聚合器：利用HE加密偏置，一边保护隐私，一边还可以进行有意义的运算，无需可信聚合器即可训练算法</p>
+<li><p><a target="_blank" rel="noopener" href="https://www.cspinet.org/eating-healthy/why-good-nutrition-important">https://www.cspinet.org/eating-healthy/why-good-nutrition-important</a></p>
 </li>
-</ul>
+<li><p><a target="_blank" rel="noopener" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5302274/#:~:text=The%20estimated%20cost%20of%20food,countries%20similarly%20have%20economic%20losses">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5302274/#:~:text=The%20estimated%20cost%20of%20food,countries%20similarly%20have%20economic%20losses</a></p>
 </li>
-<li><p>对训练和推理两阶段都有很好的隐私保护性</p>
-<ul>
-<li>训练阶段采用DPSGD的同态版提供隐私保护，可以在没有受信任的服务器的情况下实现集 中式训练</li>
-<li>推理阶段采⽤基于秘密共享的隐私推理技术，服务提供者⽆法推断出任何有⽤的信息。</li>
-<li><img src="https://s2.loli.net/2022/02/27/w7zj26uJrPmKGfX.png" style="zoom: 67%;"></li>
-</ul>
-</li>
-<li><p>高效的系统优化</p>
-<ul>
-<li>快速同态乘法：巧妙设计了神经网络层中模型参数、输⼊特征和梯度之间的乘法。线性分量作为明⽂，可以消除训练过程中的大部分重新缩放和重新线性化操作，使其能够采⽤较小的<br>加密参数和较浅的乘法深度，从⽽</li>
-<li>加速客⼾端-服务器通信：<ul>
-<li>前向传播缓存：在前向传播中预先计算加密激活函数更有效，可以避免重复计算和通信。客⼾端将每个非线性层的梯度本地缓存为明⽂，稍后可以在反向传播阶段使⽤。</li>
-<li>零解密和零加密：在离线预处理阶段，客⼾端通过加密 0 准备零密⽂流，作为一次性密⽂密文⼯作。 客⼾端一旦需要对消息进行加密，就直接将明⽂加零密⽂加密后发送给服务器，从而缩短上线阶段的加密时间。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p><strong>5.这项工作缺陷在哪里？</strong></p>
-<p>   在Sphinx推理阶段，采用秘密共享技术加速推理，但需要更新的模型参数重新运行预处理，导致计算资源浪费</p>
-<p><strong>6.他们的这项工作做的好，为啥好呢？他们是用啥理论证明的呢？（可能涉及方法正确性、性能、安全性）</strong></p>
-<ul>
-<li>结合了DP和HE，设计了⾼效且兼容的训练和推理协议以满⾜其特定要求</li>
-<li>对训练和推理两阶段都有很好的隐私保护性</li>
-<li>为了加速 HE 方案下的训练过程， 进行了多项系统优化</li>
-<li>即使与 DP 解决⽅案相比，隐私成本相似，Sphinx 在实际场景中也可以实现明显更强的攻击防御</li>
-</ul>
-<p><strong>7.作者如何设计实验的？</strong></p>
-<p> 在两台相同的物理机上，使用MNIST、CIFAR数据集，从四个方面的对比实验来证明Sphinx的优势：</p>
-<ul>
-<li>训练上：展示了Sphinx 在训练时间和通信成本⽅⾯相对于纯 HE ⽅法的提升。Sphinx 在 MNIST 和 CIFAR-10 数据集上的神经⽹络的训练时间减少了 35 倍，通信成本降低了 5 倍。</li>
-<li>推理上：Sphinx 实现了实时推理（MNIST 为 0.05 秒，CIFAR-10 为 0.08秒），与纯 HE ⽅法相⽐，分别快5.8* 104 倍和 4.2* 105 倍。此外，对于这两个任务，Sphinx 的通信成本分别低 1.9 * 105×和 3.6 * 104× </li>
-<li>隐私成本上：给定相同的隐私预算，Sphinx 与纯 DP 训练算法 DPSGD 相⽐，在没有可信服务器的情况下实现了相当的模型精度。</li>
-<li>抵抗攻击上：与纯DP 算法相比，通过屏蔽偏差分量，Sphinx 有效地保护了重构攻击，免受暴露梯度的影响。</li>
-</ul>
-<p><strong>8.</strong>   <strong>针对这项工作，作者未来还打算怎么做呢？有一些“展望”吗？</strong></p>
-<ul>
-<li>作者将在未来探索和评估不同 DP 机制和 HE ⽅案之间的组合。例如，Kairouz 等⼈提出了一种在线学习 DP 机制，该机制允许更灵活的数据访问模式 ，当训练数据为⾮ IID 时，可以在 Sphinx 中采用这种机制。</li>
-<li>对于推理阶段的预处理造成计算资源浪费的问题，作者设想了一种保护隐私的在线学习⽅法，一旦模型更新，其先前的预处理结果可以与新的模型参数保持一致，⽽⽆需额外计算。</li>
-</ul>
-<p><strong>9.这项工作的idea与哪些论文有一脉相承的关系呢？或者说，你感觉这篇论文的作者是看了哪些论文，才想到这项工作的idea呢？</strong></p>
-<ul>
-<li><p>P. Mishra, R. Lehmkuhl, A. Srinivasan, W. Zheng, and R. A. Popa, “Delphi: A cryptographic inference service for neural networks,” in 29th {USENIX} Security Symposium ({USENIX} Security 20), 2020,pp. 2505–2522.</p>
-<p>Delphi 通过将重量级密码计算提前到预处理阶段的论文，我感觉作者或许由此想到了前向传播缓存、离线预处理等idea</p>
-</li>
-<li><p>C. Juvekar, V. Vaikuntanathan, and A. Chandrakasan, “{GAZELLE}: A low latency framework for secure neural network inference,” in 27th {USENIX} Security Symposium ({USENIX} Security 18), 2018, pp.1651–1669.</p>
-<p>Gazelle 引⼊混合安全推理算法的论文，作者或许受它启发为训练和推理阶段引入了混合隐私保护协议</p>
-</li>
-</ul>
-<p><strong>10.这篇论文的核心参考文献是？这些参考文献都起到了什么作用呢？</strong></p>
-<ul>
-<li>[55] J. H. Cheon, A. Kim, M. Kim, and Y. Song, “Homomorphic encryption for arithmetic of approximate numbers,” in International Conference on the Theory and Application of Cryptology and Information Security.Springer, 2017, pp. 409–437.</li>
-</ul>
-<p>  提出了CKKS 这种可行的同态加密算法，⽀持有限数量的密⽂加法和乘法，是本文同态加密的基础</p>
-<ul>
-<li><p>[56] H. Chen, W. Dai, M. Kim, and Y. Song, “Efficient multi-key homomorphic encryption with packed ciphertexts with application to oblivious neural network inference,” in Proceedings of the 2019 ACM SIGSAC Conference on Computer and Communications Security, 2019, pp. 395–412. </p>
-<p>提供了重缩放、重线性化等同态加密运算优化操作</p>
-</li>
-<li><p>[57] S. Goryczka, L. Xiong, and V. Sunderam, “Secure multiparty aggregation with differential privacy: A comparative study,” in Proceedings of the Joint EDBT/ICDT 2013 Workshops, 2013, pp. 155–163.</p>
-<p>证明了通过 HE，用户可以在将数据发送到聚合器之前对其进行加密 。 HE 允许聚合器执行安全聚合以获得有意义的统计结果。</p>
-</li>
-<li><p>[5]P. Mishra, R. Lehmkuhl, A. Srinivasan, W. Zheng, and R. A. Popa, “Delphi: A cryptographic inference service for neural networks,” in 29th {USENIX} Security Symposium ({USENIX} Security 20), 2020,pp. 2505–2522.</p>
-<p>提供了基于线性操作的私有推理协议，为推理阶段的协议奠定了基础</p>
-</li>
-<li><p>[15]M. Abadi, A. Chu, I. Goodfellow, H. B. McMahan, I. Mironov, K. Talwar, and L. Zhang, “Deep learning with differential privacy,” in Proceedings of the 2016 ACM SIGSAC conference on computer and communications security, 2016, pp. 308–318</p>
-<p>作者的训练协议可以看作是[15] 提出的DPSGD 的同态版本，没有受信任的服务器。它采⽤采样⾼斯机制（SGM）从数据集中采样小批量，并在线性分量的聚合梯度上添加⾼斯噪声。</p>
-</li>
-</ul>
-<p><strong>11.这项工作，可以拆分为哪些子工作，就是哪些步骤。每个步骤，或者每个子工作使用了哪些工具或者方法去完成的呢？</strong></p>
-<ul>
-<li><p>Sphinx架构图：</p>
-<p><img src="https://s2.loli.net/2022/02/26/NCr4gfncFjeY6td.png" alt="image-20220226023330150"> </p>
-<p>对于 DNN 模型，线性分量 W 受到 DP 的扰动，偏置分量Bias⽤ HE 加密。 F 表示非线性层。</p>
-</li>
-<li><p>Sphinx训练算法步骤图：</p>
-<img src="https://s2.loli.net/2022/02/26/NyeG6sZ3FAhlSVj.png" alt="image-20220226023600799" style="zoom:67%;"></li>
-</ul>
+</ol>
 
             
 
@@ -619,27 +410,17 @@ mjx-container[display="true"] + br {
     </div>
     <div id="post-footer" class="post-footer main-content-wrap">
         
-            <div class="post-footer-tags">
-                <span class="text-color-light text-small">标签</span><br/>
-                
-    <a class="tag tag--primary tag--small t-none-link" href="/tags/AI%E5%AE%89%E5%85%A8/" rel="tag">AI安全</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86/" rel="tag">安全推理</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/%E9%9A%90%E7%A7%81%E8%AE%A1%E7%AE%97/" rel="tag">隐私计算</a>
-
-            </div>
-        
         
             <div class="post-actions-wrap">
     <nav>
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/08/04/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/"
-                    data-tooltip="论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案"
-                    aria-label="上一篇: 论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
                     </a>
@@ -649,9 +430,9 @@ mjx-container[display="true"] + br {
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/03/26/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86%E7%BB%8F%E5%85%B8%E8%AE%BA%E6%96%87%E6%A6%82%E8%A7%88/"
-                    data-tooltip="安全推理系列部分经典论文概览"
-                    aria-label="下一篇: 安全推理系列部分经典论文概览"
+                    href="/2024/04/14/ICIP-Workshop/"
+                    data-tooltip="ICIP_Workshop"
+                    aria-label="下一篇: ICIP_Workshop"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
@@ -676,7 +457,7 @@ mjx-container[display="true"] + br {
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="http://connect.qq.com/widget/shareqq/index.html?url=https://drokish.com/2022/03/28/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86%E4%B9%8BSphinx%E8%AE%BA%E6%96%87%E7%90%86%E8%A7%A3/&amp;title=安全推理之Sphinx论文理解"
+                    target="new" href="http://connect.qq.com/widget/shareqq/index.html?url=https://drokish.com/2024/04/14/ICIP-2024-Workshop-on-Visual-and-Sensing-AI-for-Smart-Agriculture/&amp;title=ICIP 2024 Workshop on Visual and Sensing AI for Smart Agriculture"
                     title="分享到 QQ"
                     aria-label="分享到 QQ"
                 >
@@ -689,7 +470,7 @@ mjx-container[display="true"] + br {
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://drokish.com/2022/03/28/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86%E4%B9%8BSphinx%E8%AE%BA%E6%96%87%E7%90%86%E8%A7%A3/"
+                    target="new" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://drokish.com/2024/04/14/ICIP-2024-Workshop-on-Visual-and-Sensing-AI-for-Smart-Agriculture/"
                     title="分享到 QQ空间"
                     aria-label="分享到 QQ空间"
                 >
@@ -771,14 +552,11 @@ mjx-container[display="true"] + br {
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    
-                <a
-                    class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/08/04/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-PASS/"
-                    data-tooltip="论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案"
-                    aria-label="上一篇: 论文理解：基于参数审计的抗Free Rider安全公平联邦学习方案"
-                >
-                    
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
                     </a>
@@ -788,9 +566,9 @@ mjx-container[display="true"] + br {
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2022/03/26/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86%E7%BB%8F%E5%85%B8%E8%AE%BA%E6%96%87%E6%A6%82%E8%A7%88/"
-                    data-tooltip="安全推理系列部分经典论文概览"
-                    aria-label="下一篇: 安全推理系列部分经典论文概览"
+                    href="/2024/04/14/ICIP-Workshop/"
+                    data-tooltip="ICIP_Workshop"
+                    aria-label="下一篇: ICIP_Workshop"
                 >
                     
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
@@ -815,7 +593,7 @@ mjx-container[display="true"] + br {
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="http://connect.qq.com/widget/shareqq/index.html?url=https://drokish.com/2022/03/28/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86%E4%B9%8BSphinx%E8%AE%BA%E6%96%87%E7%90%86%E8%A7%A3/&amp;title=安全推理之Sphinx论文理解"
+                    target="new" href="http://connect.qq.com/widget/shareqq/index.html?url=https://drokish.com/2024/04/14/ICIP-2024-Workshop-on-Visual-and-Sensing-AI-for-Smart-Agriculture/&amp;title=ICIP 2024 Workshop on Visual and Sensing AI for Smart Agriculture"
                     title="分享到 QQ"
                     aria-label="分享到 QQ"
                 >
@@ -828,7 +606,7 @@ mjx-container[display="true"] + br {
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://drokish.com/2022/03/28/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86%E4%B9%8BSphinx%E8%AE%BA%E6%96%87%E7%90%86%E8%A7%A3/"
+                    target="new" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://drokish.com/2024/04/14/ICIP-2024-Workshop-on-Visual-and-Sensing-AI-for-Smart-Agriculture/"
                     title="分享到 QQ空间"
                     aria-label="分享到 QQ空间"
                 >
@@ -872,7 +650,7 @@ mjx-container[display="true"] + br {
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="http://connect.qq.com/widget/shareqq/index.html?url=https://drokish.com/2022/03/28/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86%E4%B9%8BSphinx%E8%AE%BA%E6%96%87%E7%90%86%E8%A7%A3/&amp;title=安全推理之Sphinx论文理解"
+                        href="http://connect.qq.com/widget/shareqq/index.html?url=https://drokish.com/2024/04/14/ICIP-2024-Workshop-on-Visual-and-Sensing-AI-for-Smart-Agriculture/&amp;title=ICIP 2024 Workshop on Visual and Sensing AI for Smart Agriculture"
                         aria-label="分享到 QQ"
                     >
                         <i class="fab fa-qq" aria-hidden="true"></i><span>分享到 QQ</span>
@@ -885,7 +663,7 @@ mjx-container[display="true"] + br {
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://drokish.com/2022/03/28/%E5%AE%89%E5%85%A8%E6%8E%A8%E7%90%86%E4%B9%8BSphinx%E8%AE%BA%E6%96%87%E7%90%86%E8%A7%A3/"
+                        href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://drokish.com/2024/04/14/ICIP-2024-Workshop-on-Visual-and-Sensing-AI-for-Smart-Agriculture/"
                         aria-label="分享到 QQ空间"
                     >
                         <i class="fa fa-star" aria-hidden="true"></i><span>分享到 QQ空间</span>
@@ -1204,7 +982,7 @@ mjx-container[display="true"] + br {
               repo: 'GitmentStorage',
               owner: 'Liar-Mask',
               admin: ['Liar-Mask'],
-              id: '2022/03/28/安全推理之Sphinx论文理解/',
+              id: '2024/04/14/ICIP-2024-Workshop-on-Visual-and-Sensing-AI-for-Smart-Agriculture/',
               ...{"language":"zh-CN","perPage":10,"distractionFreeMode":false,"enableHotKey":true,"pagerDirection":"first"}
             }).render('gitalk')
           })()
